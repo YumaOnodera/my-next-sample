@@ -1,5 +1,7 @@
 import type { SetErrors, SetStatus } from 'types/state'
- 
+
+export type Email = string | string[]
+
 export type Props = {
     middleware?: string
     redirectIfAuthenticated?: string
@@ -8,7 +10,7 @@ export type Props = {
 export type Register = (
     params: {
         name: string
-        email: string
+        email: Email
         password: string
         password_confirmation: string
         setErrors: SetErrors
@@ -19,7 +21,7 @@ export type Login = (
     params: {
         setErrors: SetErrors
         setStatus: SetStatus
-        email: string
+        email: Email
         password: string
     }
 ) => Promise<void>
@@ -28,7 +30,7 @@ export type ForgotPassword = (
     params: {
         setErrors: SetErrors
         setStatus: SetStatus
-        email: String
+        email: Email
     }
 ) => Promise<void>
 
@@ -36,7 +38,7 @@ export type ResetPassword = (
     params: {
         setErrors: SetErrors
         setStatus: SetStatus
-        email: string
+        email: Email
         password: string
         password_confirmation: string
     }

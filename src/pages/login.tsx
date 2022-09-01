@@ -1,5 +1,6 @@
 import AuthSessionStatus from 'components/AuthSessionStatus'
 import AuthValidationErrors from 'components/AuthValidationErrors'
+import type { Email } from 'types/auth'
 import GuestLayout from 'components/Layouts/GuestLayout'
 import Link from 'next/link'
 import type { NextPage } from 'next'
@@ -13,18 +14,18 @@ const Login: NextPage = () => {
 
     const { login } = useAuth({
         middleware: 'guest',
-        redirectIfAuthenticated: '/dashboard',
+        redirectIfAuthenticated: '/home',
     })
 
-    const [email, setEmail] = useState<string>('')
+    const [email, setEmail] = useState<Email>('')
     const [password, setPassword] = useState<string>('')
     const [errors, setErrors] = useState<string[]>([])
     const [status, setStatus] = useState<Status>(null)
 
     useEffect(() => {
-        const query = router.query.reset
+        const query = router.query.reset?.toString()
         if (query && query.length > 0 && errors.length === 0) {
-            setStatus(query)
+            setStatus(decodeURIComponent(encodeURI(window.atob(query))))
         } else {
             setStatus(null)
         }

@@ -2,13 +2,13 @@ import AppLayout from 'components/Layouts/AppLayout'
 import Head from 'next/head'
 import { useAuth } from 'hooks/auth'
 
-const Dashboard = () => {
+const Home = () => {
     const { logout } = useAuth()
 
     return (
         <AppLayout
             header={
-                <h2>Dashboard</h2>
+                <h2>Home</h2>
             }>
 
             <Head>
@@ -23,4 +23,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard
+export default Home

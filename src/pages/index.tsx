@@ -15,8 +15,8 @@ const Home: NextPage = () => {
             </Head>
 
             {user ?
-                <Link href="/dashboard">
-                    <a>Dashboard</a>
+                <Link href="/home">
+                    <a>Home</a>
                 </Link>
                 :
                 <>

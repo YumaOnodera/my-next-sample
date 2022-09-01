@@ -1,4 +1,5 @@
 import AuthValidationErrors from 'components/AuthValidationErrors'
+import type { Email } from 'types/auth'
 import GuestLayout from 'components/Layouts/GuestLayout'
 import Link from 'next/link'
 import type { NextPage } from 'next'
@@ -8,11 +9,11 @@ import { useState } from 'react'
 const Register: NextPage = () => {
 	const { register } = useAuth({
 		middleware: 'guest',
-		redirectIfAuthenticated: '/dashboard',
+		redirectIfAuthenticated: '/home',
 	})
 
 	const [name, setName] = useState<string>('')
-    const [email, setEmail] = useState<string>('')
+    const [email, setEmail] = useState<Email>('')
     const [password, setPassword] = useState<string>('')
     const [passwordConfirmation, setPasswordConfirmation] = useState<string>('')
     const [errors, setErrors] = useState<string[]>([])
