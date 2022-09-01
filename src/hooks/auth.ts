@@ -12,7 +12,7 @@ export const useAuth = (props?: Props) => {
     const { data: user, error, mutate } = useSWR('/api/user', () =>
         axios
             .get('/api/user')
-            .then(res => res.data)
+            .then(response => response.data)
             .catch(error => {
                 if (error.response.status !== 409) throw error
 
@@ -33,7 +33,7 @@ export const useAuth = (props?: Props) => {
             .catch(error => {
                 if (error.response.status !== 422) throw error
 
-                setErrors(objectValuesToString(error.response.data.errors))
+                setErrors(objectValuesToString(error.response.data.message))
             })
     }
 
@@ -49,7 +49,7 @@ export const useAuth = (props?: Props) => {
             .catch(error => {
                 if (error.response.status !== 422) throw error
 
-                setErrors(objectValuesToString(error.response.data.errors))
+                setErrors(objectValuesToString(error.response.data.message))
             })
     }
 
@@ -61,11 +61,11 @@ export const useAuth = (props?: Props) => {
 
         axios
             .post('/forgot-password', { email })
-            .then(response => setStatus(response.data.status))
+            .then(response => setStatus(response.status))
             .catch(error => {
                 if (error.response.status !== 422) throw error
 
-                setErrors(objectValuesToString(error.response.data.errors))
+                setErrors(objectValuesToString(error.response.data.message))
             })
     }
 
@@ -77,18 +77,18 @@ export const useAuth = (props?: Props) => {
 
         axios
             .post('/reset-password', { token: router.query.token, ...props })
-            .then(response => router.push('/login?reset=' + btoa(response.data.status)))
+            .then(response => router.push('/login?reset=' + window.btoa(decodeURI(encodeURIComponent(response.status)))))
             .catch(error => {
                 if (error.response.status !== 422) throw error
 
-                setErrors(objectValuesToString(error.response.data.errors))
+                setErrors(objectValuesToString(error.response.data.message))
             })
     }
 
     const resendEmailVerification: ResendEmailVerification = ({ setStatus }) => {
         axios
             .post('/email/verification-notification')
-            .then(response => setStatus(response.data.status))
+            .then(response => setStatus(response.status))
     }
 
     const logout = async () => {
