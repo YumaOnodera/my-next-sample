@@ -61,7 +61,7 @@ export const useAuth = (props?: Props) => {
 
         axios
             .post('/forgot-password', { email })
-            .then(response => setStatus(response.status))
+            .then(response => setStatus(response.data.status))
             .catch(error => {
                 if (error.response.status !== 422) throw error
 
@@ -77,7 +77,7 @@ export const useAuth = (props?: Props) => {
 
         axios
             .post('/reset-password', { token: router.query.token, ...props })
-            .then(response => router.push('/login?reset=' + window.btoa(decodeURI(encodeURIComponent(response.status)))))
+            .then(response => router.push('/login?reset=' + window.btoa(encodeURIComponent(response.data.status))))
             .catch(error => {
                 if (error.response.status !== 422) throw error
 
@@ -88,7 +88,7 @@ export const useAuth = (props?: Props) => {
     const resendEmailVerification: ResendEmailVerification = ({ setStatus }) => {
         axios
             .post('/email/verification-notification')
-            .then(response => setStatus(response.status))
+            .then(response => setStatus(response.data.status))
     }
 
     const logout = async () => {

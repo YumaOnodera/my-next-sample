@@ -25,7 +25,7 @@ const Login: NextPage = () => {
     useEffect(() => {
         const query = router.query.reset?.toString()
         if (query && query.length > 0 && errors.length === 0) {
-            setStatus(decodeURIComponent(encodeURI(window.atob(query))))
+            setStatus(decodeURIComponent(window.atob(query)))
         } else {
             setStatus(null)
         }
