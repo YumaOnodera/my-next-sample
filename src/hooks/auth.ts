@@ -3,7 +3,16 @@ import useSWR from 'swr'
 import { objectValuesToString } from 'utils/format'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import type { Props, Register, Login, ForgotPassword, ResetPassword, ResendEmailVerification } from 'types/auth'
+import type {
+    Props,
+    Register,
+    CheckDeletedUser,
+    Restore,
+    Login,
+    ForgotPassword,
+    ResetPassword,
+    ResendEmailVerification
+} from 'types/auth'
 
 export const useAuth = (props?: Props) => {
 
@@ -29,6 +38,36 @@ export const useAuth = (props?: Props) => {
 
         axios
             .post('/register', props)
+            .then(() => mutate())
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(objectValuesToString(error.response.data.message))
+            })
+    }
+
+    const checkDeletedUser: CheckDeletedUser = async ({setIsDeleted, setErrors, ...props }) => {
+        await csrf()
+
+        setErrors([])
+
+        axios
+            .post('/deleted-user/check', props)
+            .then(response => setIsDeleted(response.data.is_deleted))
+            .catch(error => {
+                if (error.response.status !== 422) throw error
+
+                setErrors(objectValuesToString(error.response.data.message))
+            })
+    }
+
+    const restore: Restore = async ({setErrors, ...props }) => {
+        await csrf()
+
+        setErrors([])
+
+        axios
+            .post('/restore', props)
             .then(() => mutate())
             .catch(error => {
                 if (error.response.status !== 422) throw error
@@ -109,6 +148,8 @@ export const useAuth = (props?: Props) => {
     return {
         user,
         register,
+        checkDeletedUser,
+        restore,
         login,
         forgotPassword,
         resetPassword,
