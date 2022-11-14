@@ -1,1 +1,1 @@
-export type Status = string | string[] | number | null
+export type Status = string | string[] | number | null;

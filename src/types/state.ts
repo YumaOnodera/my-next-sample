@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction } from 'react'
-import type { Status } from 'types/status'
+import { Dispatch, SetStateAction } from "react";
 
-export type SetErrors = Dispatch<SetStateAction<string[]>>
-export type SetStatus = Dispatch<SetStateAction<Status>>
+import type { Status } from "types/status";
+
+export type SetErrors = Dispatch<SetStateAction<string[]>>;
+export type SetStatus = Dispatch<SetStateAction<Status>>;

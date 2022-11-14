@@ -1,26 +1,28 @@
-import { ReactNode } from 'react'
-import { useAuth } from 'hooks/auth'
+import { ReactNode } from "react";
 
-const AppLayout: React.FC<{ header: ReactNode, children: ReactNode }> = ({ header, children }) => {
-    const { user } = useAuth({ middleware: 'auth' })
+import { useAuth } from "hooks/auth";
 
-    return (
-        <div>
-            {/* Page Heading */}
-            <header>
-                <div>
-                    {header}
-                </div>
-            </header>
+const AppLayout: React.FC<{ header: ReactNode; children: ReactNode }> = ({
+  header,
+  children,
+}) => {
+  const { user } = useAuth({ middleware: "auth" });
 
-            {/* Page Content */}
-            <main>
-                {children}
-                { user?.name }
-                { user?.email }
-            </main>
-        </div>
-    )
-}
+  return (
+    <div>
+      {/* Page Heading */}
+      <header>
+        <div>{header}</div>
+      </header>
 
-export default AppLayout
+      {/* Page Content */}
+      <main>
+        {children}
+        {user?.name}
+        {user?.email}
+      </main>
+    </div>
+  );
+};
+
+export default AppLayout;
