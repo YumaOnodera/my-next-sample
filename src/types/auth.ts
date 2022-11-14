@@ -1,3 +1,4 @@
+import {Dispatch, SetStateAction} from "react";
 import type { SetErrors, SetStatus } from 'types/state'
 
 export type Email = string | string[]
@@ -13,6 +14,23 @@ export type Register = (
         email: Email
         password: string
         password_confirmation: string
+        setErrors: SetErrors
+    }
+) => Promise<void>
+
+export type CheckDeletedUser = (
+    params: {
+        email: Email
+        password: string
+        setIsDeleted: Dispatch<SetStateAction<boolean>>
+        setErrors: SetErrors
+    }
+) => Promise<void>
+
+export type Restore = (
+    params: {
+        email: Email
+        password: string
         setErrors: SetErrors
     }
 ) => Promise<void>
