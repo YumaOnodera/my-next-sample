@@ -1,3 +1,4 @@
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -6,24 +7,24 @@ import AuthValidationErrors from "components/AuthValidationErrors";
 import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/auth";
 
-import type { Email } from "types/auth";
+import type { Errors } from "types/errors";
 import type { Status } from "types/status";
 
-const PasswordReset = () => {
+const PasswordReset: NextPage = () => {
   const router = useRouter();
 
   const { resetPassword } = useAuth({ middleware: "guest" });
 
-  const [email, setEmail] = useState<Email>("");
-  const [password, setPassword] = useState<string>("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [errors, setErrors] = useState<Errors>([]);
   const [status, setStatus] = useState<Status>(null);
 
-  const submitForm = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
+  const submitForm = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
 
-    resetPassword({
+    await resetPassword({
       email,
       password,
       password_confirmation: passwordConfirmation,
@@ -33,8 +34,9 @@ const PasswordReset = () => {
   };
 
   useEffect(() => {
-    setEmail(router.query.email || "");
-  }, [router.query.email]);
+    const email = router.query.email?.toString();
+    setEmail(email || "");
+  }, [email]);
 
   return (
     <GuestLayout>

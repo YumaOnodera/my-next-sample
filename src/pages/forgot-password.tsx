@@ -1,3 +1,4 @@
+import { NextPage } from "next";
 import { useState } from "react";
 
 import AuthSessionStatus from "components/AuthSessionStatus";
@@ -5,20 +6,20 @@ import AuthValidationErrors from "components/AuthValidationErrors";
 import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/auth";
 
-import type { Email } from "types/auth";
+import type { Errors } from "types/errors";
 import type { Status } from "types/status";
 
-const ForgotPassword = () => {
+const ForgotPassword: NextPage = () => {
   const { forgotPassword } = useAuth({ middleware: "guest" });
 
-  const [email, setEmail] = useState<Email>("");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState<Errors>([]);
   const [status, setStatus] = useState<Status>(null);
 
-  const submitForm = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
+  const submitForm = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
 
-    forgotPassword({ email, setErrors, setStatus });
+    await forgotPassword({ email, setErrors, setStatus });
   };
 
   return (

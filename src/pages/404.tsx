@@ -1,3 +1,5 @@
-const NotFoundPage = () => <div>404 Not Found</div>;
+import { NextPage } from "next";
+
+const NotFoundPage: NextPage = () => <div>404 Not Found</div>;
 
 export default NotFoundPage;

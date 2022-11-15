@@ -6,24 +6,24 @@ import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/auth";
 
 import type { NextPage } from "next";
-import type { Email } from "types/auth";
+import type { Errors } from "types/errors";
 
 const Register: NextPage = () => {
   const { register } = useAuth({
     middleware: "guest",
-    redirectIfAuthenticated: "/home",
+    redirectIfAuthenticated: "/",
   });
 
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<Email>("");
-  const [password, setPassword] = useState<string>("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [errors, setErrors] = useState<Errors>([]);
 
-  const submitForm = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
+  const submitForm = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
 
-    register({
+    await register({
       name,
       email,
       password,
