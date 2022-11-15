@@ -1,12 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
 
+import AppLayout from "components/Layouts/AppLayout";
+import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/auth";
 
 import type { NextPage } from "next";
 
 const Home: NextPage = () => {
-  const { user } = useAuth({ middleware: "guest" });
+  const { user, logout } = useAuth({ middleware: "guest" });
 
   return (
     <div>
@@ -17,11 +19,14 @@ const Home: NextPage = () => {
       </Head>
 
       {user ? (
-        <Link href="/home">
-          <a>Home</a>
-        </Link>
+        <AppLayout header={<h2>Home</h2>}>
+          <div>You&apos;re logged in!</div>
+          <button type="button" onClick={logout}>
+            Logout
+          </button>
+        </AppLayout>
       ) : (
-        <>
+        <GuestLayout>
           <Link href="/login">
             <a>Login</a>
           </Link>
@@ -29,7 +34,7 @@ const Home: NextPage = () => {
           <Link href="/register">
             <a>Register</a>
           </Link>
-        </>
+        </GuestLayout>
       )}
     </div>
   );
