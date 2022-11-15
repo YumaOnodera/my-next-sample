@@ -1,3 +1,5 @@
+import React from "react";
+
 const AuthValidationErrors: React.FC<{ errors: string[] }> = ({
   errors = [],
   ...props
