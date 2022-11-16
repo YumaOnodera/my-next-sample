@@ -36,7 +36,7 @@ const PasswordReset: NextPage = () => {
   useEffect(() => {
     const email = router.query.email?.toString();
     setEmail(email || "");
-  }, [email]);
+  }, [router]);
 
   return (
     <GuestLayout>

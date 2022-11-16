@@ -19,13 +19,13 @@ type Register = (params: {
 type RestoreToken = (params: {
   email: string;
   password: string;
-  setRestoreToken: Dispatch<SetStateAction<string>>;
   setErrors: SetErrors;
-}) => Promise<void>;
+}) => Promise<string>;
 
 type Restore = (params: {
   restore_token: string;
   setErrors: SetErrors;
+  setRestoreCompleted: Dispatch<SetStateAction<boolean>>;
 }) => Promise<void>;
 
 type Login = (params: {

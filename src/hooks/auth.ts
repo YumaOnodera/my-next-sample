@@ -51,16 +51,12 @@ export const useAuth = (props?: AuthProps) => {
       });
   };
 
-  const restoreToken: RestoreToken = async ({
-    setRestoreToken,
-    setErrors,
-    ...props
-  }) => {
+  const restoreToken: RestoreToken = async ({ setErrors, ...props }) => {
     await csrf();
 
     setErrors([]);
 
-    axios
+    return axios
       .post("/restore-token", props)
       .then((response) => response.data.restore_token)
       .catch((error) => {
@@ -70,14 +66,18 @@ export const useAuth = (props?: AuthProps) => {
       });
   };
 
-  const restore: Restore = async ({ setErrors, ...props }) => {
+  const restore: Restore = async ({
+    setErrors,
+    setRestoreCompleted,
+    ...props
+  }) => {
     await csrf();
 
     setErrors([]);
 
     axios
       .post("/restore", props)
-      .then(() => router.push("/login"))
+      .then(() => setRestoreCompleted(true))
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 
@@ -164,7 +164,14 @@ export const useAuth = (props?: AuthProps) => {
     if (props?.middleware === "guest" && props.redirectIfAuthenticated && user)
       router.push(props.redirectIfAuthenticated);
     if (props?.middleware === "auth" && error) logout();
-  }, [user, error]);
+  }, [
+    props?.middleware,
+    props?.redirectIfAuthenticated,
+    user,
+    error,
+    router,
+    logout,
+  ]);
 
   return {
     user,
