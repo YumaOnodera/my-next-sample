@@ -4,7 +4,7 @@ import { useState } from "react";
 import AuthSessionStatus from "components/AuthSessionStatus";
 import AuthValidationErrors from "components/AuthValidationErrors";
 import GuestLayout from "components/Layouts/GuestLayout";
-import { useAuth } from "hooks/auth";
+import { useAuth } from "hooks/useAuth";
 
 import type { Errors } from "types/errors";
 import type { Status } from "types/status";

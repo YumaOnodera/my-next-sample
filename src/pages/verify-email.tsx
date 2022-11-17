@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import GuestLayout from "components/Layouts/GuestLayout";
-import { useAuth } from "hooks/auth";
+import { useAuth } from "hooks/useAuth";
 
 import type { Status } from "types/status";
 

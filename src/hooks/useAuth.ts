@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import useSWR from "swr";
 
+import { useCsrf } from "hooks/useCsrf";
+import { useFormat } from "hooks/useFormat";
+import { useUser } from "hooks/useUser";
 import axios from "libs/axios";
-import { objectValuesToString } from "utils/format";
 
 import type {
   AuthProps,
@@ -18,23 +19,9 @@ import type {
 
 export const useAuth = (props?: AuthProps) => {
   const router = useRouter();
-
-  const {
-    data: user,
-    error,
-    mutate,
-  } = useSWR("/api/user", () =>
-    axios
-      .get("/api/user")
-      .then((response) => response.data)
-      .catch((error) => {
-        if (error.response.status !== 409) throw error;
-
-        router.push("/verify-email");
-      })
-  );
-
-  const csrf = () => axios.get("/sanctum/csrf-cookie");
+  const csrf = useCsrf();
+  const { objectValuesToString } = useFormat();
+  const { user, error, mutate } = useUser();
 
   const register: Register = async ({ setErrors, ...props }) => {
     await csrf();
