@@ -1,13 +1,22 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
 
 import AppLayout from "components/Layouts/AppLayout";
 import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/useAuth";
+import { usePosts } from "hooks/usePosts";
 
 import type { NextPage } from "next";
+import type { Posts } from "types/posts";
 
 const Home: NextPage = () => {
   const { user, logout } = useAuth();
+  const { getPosts } = usePosts();
+  const [posts, setPosts] = useState<Posts>(null);
+
+  useEffect(() => {
+    getPosts({ setPosts, page: 1, order_by: "created_at", order: "desc" });
+  }, []);
 
   return (
     <div>
@@ -23,6 +32,16 @@ const Home: NextPage = () => {
             <button type="button" onClick={logout}>
               Logout
             </button>
+
+            {posts?.data.map((post) => {
+              return (
+                <div key={post.id}>
+                  <hr />
+                  <div>{post.text}</div>
+                  <div>{post.created_by}</div>
+                </div>
+              );
+            })}
           </AppLayout>
         </>
       ) : (
