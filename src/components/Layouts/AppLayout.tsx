@@ -1,10 +1,17 @@
 import Link from "next/link";
 import React, { ReactNode } from "react";
+import { useDispatch } from "react-redux";
 
 import { useAuth } from "hooks/useAuth";
+import { toggleModal } from "store/modules/postModal";
 
 const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const dispatch = useDispatch();
   const { user } = useAuth({ middleware: "auth" });
+
+  const clickHandler = () => {
+    dispatch(toggleModal());
+  };
 
   return (
     <div>
@@ -27,7 +34,7 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
           <div>その他</div>
 
-          <div>投稿</div>
+          <div onClick={() => clickHandler()}>投稿</div>
         </nav>
       </header>
 
