@@ -1,12 +1,12 @@
+import { useAuth } from "hooks/useAuth";
 import { useFormat } from "hooks/useFormat";
-import { useUser } from "hooks/useUser";
 import axios from "libs/axios";
 
 import type { UpdateUser } from "types/users";
 
 export const useUsers = () => {
   const { objectValuesToString } = useFormat();
-  const { mutate } = useUser();
+  const { mutate } = useAuth();
 
   const update: UpdateUser = async ({ setErrors, ...props }) => {
     setErrors([]);

@@ -8,6 +8,17 @@ type AuthProps = {
   redirectIfAuthenticated?: string;
 };
 
+type User = {
+  id: number;
+  name: string;
+  email?: string;
+  email_verified_at?: string;
+  is_admin?: boolean;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string;
+};
+
 type Register = (params: {
   name: string;
   email: string;
@@ -53,6 +64,7 @@ type ResendEmailVerification = (params: { setStatus: SetStatus }) => void;
 
 export type {
   AuthProps,
+  User,
   Register,
   RestoreToken,
   Restore,

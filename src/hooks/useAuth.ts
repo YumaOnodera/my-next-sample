@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import useSWR from "swr";
 
 import { useCsrf } from "hooks/useCsrf";
 import { useFormat } from "hooks/useFormat";
-import { useUser } from "hooks/useUser";
 import axios from "libs/axios";
 
 import type {
@@ -15,13 +15,25 @@ import type {
   ResetPassword,
   Restore,
   RestoreToken,
+  User,
 } from "types/auth";
 
 export const useAuth = (props?: AuthProps) => {
   const router = useRouter();
   const csrf = useCsrf();
   const { objectValuesToString } = useFormat();
-  const { user, error, mutate } = useUser();
+
+  const fetcher = (url: string) =>
+    axios
+      .get(url)
+      .then((response) => response.data)
+      .catch((error) => {
+        if (error.response.status !== 409) throw error;
+
+        router.push("/verify-email");
+      });
+
+  const { data: user, error, mutate } = useSWR<User>("/api/user", fetcher);
 
   const register: Register = async ({ setErrors, ...props }) => {
     await csrf();
@@ -139,29 +151,30 @@ export const useAuth = (props?: AuthProps) => {
       .then((response) => setStatus(response.data.status));
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     if (!error) {
       await axios.post("/logout").then(() => mutate());
     }
 
     window.location.pathname = "/login";
-  };
+  }, [error, mutate]);
 
   useEffect(() => {
     if (props?.middleware === "guest" && props.redirectIfAuthenticated && user)
       router.push(props.redirectIfAuthenticated);
     if (props?.middleware === "auth" && error) logout();
   }, [
+    error,
+    logout,
     props?.middleware,
     props?.redirectIfAuthenticated,
-    user,
-    error,
     router,
-    logout,
+    user,
   ]);
 
   return {
     user,
+    mutate,
     register,
     restoreToken,
     restore,
