@@ -1,22 +1,38 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import AppLayout from "components/Layouts/AppLayout";
 import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/useAuth";
 import { usePosts } from "hooks/usePosts";
+import { inputPost } from "store/modules/post";
+import { RootState } from "store/types/rootState";
+
+import AuthValidationErrors from "../components/AuthValidationErrors";
+import { Errors } from "../types/errors";
 
 import type { NextPage } from "next";
-import type { Posts } from "types/posts";
 
 const Home: NextPage = () => {
   const { user, logout } = useAuth();
-  const { getPosts } = usePosts();
-  const [posts, setPosts] = useState<Posts>(null);
+  const { posts, storePost } = usePosts({
+    order_by: "created_at",
+    order: "desc",
+  });
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state);
 
-  useEffect(() => {
-    getPosts({ setPosts, page: 1, order_by: "created_at", order: "desc" });
-  }, []);
+  const [errors, setErrors] = useState<Errors>([]);
+
+  const changeHandler = (value: string) => {
+    dispatch(inputPost(value));
+  };
+
+  const submitForm = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    await storePost({ text: state.post.content, setErrors });
+  };
 
   return (
     <div>
@@ -29,9 +45,23 @@ const Home: NextPage = () => {
           </Head>
 
           <AppLayout>
+            {/* Validation Errors */}
+            <AuthValidationErrors errors={errors} />
+
             <button type="button" onClick={logout}>
               Logout
             </button>
+
+            {state.postModal && (
+              <form onSubmit={submitForm}>
+                <textarea
+                  id="name"
+                  value={state.post.content}
+                  onChange={(e) => changeHandler(e.target.value)}
+                />
+                <button type="submit">投稿</button>
+              </form>
+            )}
 
             {posts?.data.map((post) => {
               return (

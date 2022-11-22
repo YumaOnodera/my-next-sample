@@ -1,6 +1,15 @@
-import { Dispatch, SetStateAction } from "react";
+import { SetErrors } from "./errors";
 
 import type { Paginate } from "types/Paginate";
+
+type PostsProps = {
+  page?: string;
+  keyword?: string;
+  per_page?: string;
+  order_by?: string;
+  order?: string;
+  user_ids?: string[];
+};
 
 type Post = {
   id: number;
@@ -17,14 +26,9 @@ type Posts =
     } & Paginate)
   | null;
 
-type PostsParams = (params: {
-  setPosts: Dispatch<SetStateAction<Posts>>;
-  page: number;
-  keyword?: string;
-  per_page?: number;
-  order_by?: string;
-  order?: string;
-  user_ids?: number[];
+type StorePost = (params: {
+  text: string;
+  setErrors: SetErrors;
 }) => Promise<void>;
 
-export type { Post, Posts, PostsParams };
+export type { PostsProps, Post, Posts, StorePost };
