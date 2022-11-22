@@ -29,7 +29,8 @@ const Settings: NextPage = () => {
   };
 
   useEffect(() => {
-    setName(user?.name);
+    if (!user) return;
+    setName(user.name);
   }, [user]);
 
   return (
