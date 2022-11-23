@@ -34,7 +34,12 @@ const postSearch = createSlice({
       state.user_ids = [...state.user_ids, payload];
     },
     reset(state) {
-      state = initialState;
+      state.page = 1;
+      state.keyword = "";
+      state.per_page = 10;
+      state.order_by = "created_at";
+      state.order = "desc";
+      state.user_ids = [];
     },
   },
 });

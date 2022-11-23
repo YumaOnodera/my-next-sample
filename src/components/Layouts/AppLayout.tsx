@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { useAuth } from "hooks/useAuth";
 import { toggleModal } from "store/modules/postModal";
+import { reset } from "store/modules/postSearch";
 
 const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
       {/* Page Heading */}
       <header>
         <nav>
-          <div>
+          <div onClick={() => dispatch(reset())}>
             <Link href="/">
               <a>ホーム</a>
             </Link>
