@@ -7,6 +7,7 @@ import AppLayout from "components/Layouts/AppLayout";
 import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/useAuth";
 import { usePosts } from "hooks/usePosts";
+import { toggleModal } from "store/modules/postModal";
 import { setUserId } from "store/modules/postSearch";
 import { RootState } from "store/types/rootState";
 
@@ -27,6 +28,9 @@ const Home: NextPage = () => {
     e.preventDefault();
 
     await storePost({ text: inputPost, setErrors });
+
+    setInputPost("");
+    dispatch(toggleModal());
   };
 
   return (
