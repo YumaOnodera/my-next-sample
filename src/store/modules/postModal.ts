@@ -10,7 +10,6 @@ const postModal = createSlice({
   },
 });
 
-const { toggleModal } = postModal.actions;
+export const { toggleModal } = postModal.actions;
 
-export { toggleModal };
 export default postModal.reducer;

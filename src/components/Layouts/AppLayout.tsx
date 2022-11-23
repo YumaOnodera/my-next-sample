@@ -9,10 +9,6 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch();
   const { user } = useAuth({ middleware: "auth" });
 
-  const clickHandler = () => {
-    dispatch(toggleModal());
-  };
-
   return (
     <div>
       {/* Page Heading */}
@@ -34,7 +30,7 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
 
           <div>その他</div>
 
-          <div onClick={() => clickHandler()}>投稿</div>
+          <div onClick={() => dispatch(toggleModal())}>投稿</div>
         </nav>
       </header>
 

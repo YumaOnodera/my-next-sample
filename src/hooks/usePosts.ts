@@ -1,12 +1,15 @@
+import { useSelector } from "react-redux";
 import useSWR from "swr";
 
 import { useFormat } from "hooks/useFormat";
 import axios from "libs/axios";
-import { StorePost } from "types/posts";
+import { RootState } from "store/types/rootState";
 
-import type { Posts, PostsProps } from "types/posts";
+import type { Posts, StorePost } from "types/posts";
 
-export const usePosts = (props?: PostsProps) => {
+export const usePosts = () => {
+  const state = useSelector((state: RootState) => state);
+
   const { objectValuesToString, createQuery } = useFormat();
 
   const fetcher = (url: string) =>
@@ -18,11 +21,11 @@ export const usePosts = (props?: PostsProps) => {
 
         console.error(objectValuesToString(error.response.data.message));
       });
-  const url = props
-    ? "/api/posts?" + createQuery<PostsProps>(props)
-    : "/api/posts";
 
-  const { data: posts, mutate } = useSWR<Posts>(url, fetcher);
+  const { data: posts, mutate } = useSWR<Posts>(
+    "/api/posts?" + createQuery(state.postSearch),
+    fetcher
+  );
 
   const storePost: StorePost = async ({ setErrors, ...props }) => {
     axios

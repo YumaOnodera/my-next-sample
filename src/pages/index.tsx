@@ -2,36 +2,31 @@ import Head from "next/head";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/useAuth";
 import { usePosts } from "hooks/usePosts";
-import { inputPost } from "store/modules/post";
+import { setUserId } from "store/modules/postSearch";
 import { RootState } from "store/types/rootState";
 
-import AuthValidationErrors from "../components/AuthValidationErrors";
-import { Errors } from "../types/errors";
-
 import type { NextPage } from "next";
+import type { Errors } from "types/errors";
 
 const Home: NextPage = () => {
-  const { user, logout } = useAuth();
-  const { posts, storePost } = usePosts({
-    order_by: "created_at",
-    order: "desc",
-  });
+  const [errors, setErrors] = useState<Errors>([]);
+  const [inputPost, setInputPost] = useState("");
+
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
 
-  const [errors, setErrors] = useState<Errors>([]);
-
-  const changeHandler = (value: string) => {
-    dispatch(inputPost(value));
-  };
+  const { user, logout } = useAuth();
+  const { posts, storePost } = usePosts();
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    await storePost({ text: state.post.content, setErrors });
+
+    await storePost({ text: inputPost, setErrors });
   };
 
   return (
@@ -56,8 +51,8 @@ const Home: NextPage = () => {
               <form onSubmit={submitForm}>
                 <textarea
                   id="name"
-                  value={state.post.content}
-                  onChange={(e) => changeHandler(e.target.value)}
+                  value={inputPost}
+                  onChange={(e) => setInputPost(e.target.value)}
                 />
                 <button type="submit">投稿</button>
               </form>
@@ -68,7 +63,9 @@ const Home: NextPage = () => {
                 <div key={post.id}>
                   <hr />
                   <div>{post.text}</div>
-                  <div>{post.created_by}</div>
+                  <div onClick={() => dispatch(setUserId(post.user_id))}>
+                    {post.created_by}
+                  </div>
                 </div>
               );
             })}

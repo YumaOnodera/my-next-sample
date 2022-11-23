@@ -1,7 +1,7 @@
+import type { PostSearchState } from "./postSearchState";
+
 type RootState = {
-  post: {
-    content: string;
-  };
+  postSearch: PostSearchState;
   postModal: boolean;
 };
 
