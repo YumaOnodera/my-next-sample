@@ -27,8 +27,6 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
             </Link>
           </div>
 
-          <div>検索</div>
-
           <div>その他</div>
 
           <div onClick={() => dispatch(toggleModal())}>投稿</div>

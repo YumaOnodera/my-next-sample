@@ -6,8 +6,8 @@ const initialState: PostSearchState = {
   page: 1,
   keyword: "",
   per_page: 10,
-  order_by: "created_at",
-  order: "desc",
+  order_by: "",
+  order: "",
   user_ids: [],
 };
 
@@ -24,11 +24,10 @@ const postSearch = createSlice({
     setPerPage(state, { payload }) {
       state.per_page = payload;
     },
-    setOrderBy(state, { payload }) {
-      state.order_by = payload;
-    },
     setOrder(state, { payload }) {
-      state.order = payload;
+      const orderValues = payload ? payload.split(":") : ["", ""];
+      state.order_by = orderValues[0];
+      state.order = orderValues[1];
     },
     setUserId(state, { payload }) {
       state.user_ids = [...state.user_ids, payload];
@@ -44,14 +43,7 @@ const postSearch = createSlice({
   },
 });
 
-export const {
-  setPage,
-  setKeyword,
-  setPerPage,
-  setOrderBy,
-  setOrder,
-  setUserId,
-  reset,
-} = postSearch.actions;
+export const { setPage, setKeyword, setPerPage, setOrder, setUserId, reset } =
+  postSearch.actions;
 
 export default postSearch.reducer;

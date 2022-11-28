@@ -8,7 +8,7 @@ import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/useAuth";
 import { usePosts } from "hooks/usePosts";
 import { toggleModal } from "store/modules/postModal";
-import { setUserId } from "store/modules/postSearch";
+import { setKeyword, setOrder, setUserId } from "store/modules/postSearch";
 import { RootState } from "store/types/rootState";
 
 import type { NextPage } from "next";
@@ -17,6 +17,8 @@ import type { Errors } from "types/errors";
 const Home: NextPage = () => {
   const [errors, setErrors] = useState<Errors>([]);
   const [inputPost, setInputPost] = useState("");
+  const [searchBarOpen, setSearchBarOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
@@ -33,6 +35,15 @@ const Home: NextPage = () => {
     dispatch(toggleModal());
   };
 
+  const submitSearch = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    dispatch(setKeyword(searchText));
+
+    setKeyword("");
+    setSearchBarOpen(false);
+  };
+
   return (
     <div>
       {user ? (
@@ -44,6 +55,30 @@ const Home: NextPage = () => {
           </Head>
 
           <AppLayout>
+            <button onClick={() => setSearchBarOpen((prev) => !prev)}>
+              検索
+            </button>
+            <form onSubmit={submitSearch}>
+              {searchBarOpen && (
+                <input
+                  id="search"
+                  type="text"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+              )}
+            </form>
+
+            {state.postSearch.order_by + ":" + state.postSearch.order}
+            <select
+              value={state.postSearch.order_by + ":" + state.postSearch.order}
+              onChange={(e) => dispatch(setOrder(e.target.value))}
+            >
+              <option value="">関連度順</option>
+              <option value="created_at:desc">作成日が新しい順</option>
+              <option value="created_at:asc">作成日が古い順</option>
+            </select>
+
             {/* Validation Errors */}
             <AuthValidationErrors errors={errors} />
 
