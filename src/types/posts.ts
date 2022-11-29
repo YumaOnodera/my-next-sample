@@ -1,6 +1,6 @@
 import { SetErrors } from "./errors";
 
-import type { Paginate } from "types/Paginate";
+import type { Paginate } from "types/paginate";
 
 type Post = {
   id: number;
