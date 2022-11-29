@@ -6,8 +6,8 @@ const initialState: PostSearchState = {
   page: 1,
   keyword: "",
   per_page: 10,
-  order_by: "",
-  order: "",
+  order_by: "created_at",
+  order: "desc",
   user_ids: [],
 };
 

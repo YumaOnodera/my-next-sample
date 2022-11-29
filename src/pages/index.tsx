@@ -38,7 +38,10 @@ const Home: NextPage = () => {
   const submitSearch = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
+    const order = searchText ? "" : "created_at:desc";
+
     dispatch(setKeyword(searchText));
+    dispatch(setOrder(order));
 
     setKeyword("");
     setSearchBarOpen(false);
