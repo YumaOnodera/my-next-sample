@@ -72,7 +72,6 @@ const Home: NextPage = () => {
               )}
             </form>
 
-            {state.postSearch.order_by + ":" + state.postSearch.order}
             <select
               value={state.postSearch.order_by + ":" + state.postSearch.order}
               onChange={(e) => dispatch(setOrder(e.target.value))}
