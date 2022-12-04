@@ -1,12 +1,14 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import GuestLayout from "components/Layouts/GuestLayout";
+import { useIndexForPosts } from "hooks/posts/swr/useIndexForPosts";
+import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
-import { usePosts } from "hooks/usePosts";
 import { toggleModal } from "store/modules/postModal";
 import { setKeyword, setOrder, setUserId } from "store/modules/postSearch";
 import { RootState } from "store/types/rootState";
@@ -15,6 +17,8 @@ import type { NextPage } from "next";
 import type { Errors } from "types/errors";
 
 const Home: NextPage = () => {
+  const router = useRouter();
+
   const [errors, setErrors] = useState<Errors>([]);
   const [inputPost, setInputPost] = useState("");
   const [searchBarOpen, setSearchBarOpen] = useState(false);
@@ -24,7 +28,8 @@ const Home: NextPage = () => {
   const state = useSelector((state: RootState) => state);
 
   const { user, logout } = useAuth();
-  const { posts, storePost } = usePosts();
+  const { storePost } = usePosts();
+  const { posts } = useIndexForPosts();
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -101,7 +106,12 @@ const Home: NextPage = () => {
 
             {posts?.data.map((post) => {
               return (
-                <div key={post.id}>
+                <div
+                  key={post.id}
+                  onClick={() =>
+                    router.push(`/${post.user_id}/articles/${post.id}`)
+                  }
+                >
                   <hr />
                   <div>{post.text}</div>
                   <div onClick={() => dispatch(setUserId(post.user_id))}>
