@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
-import { useIndexForPosts } from "hooks/posts/swr/useIndexForPosts";
+import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
 import { useShowForUser } from "hooks/users/swr/useShowForUser";
 import { useUsers } from "hooks/users/useUsers";
@@ -28,7 +28,7 @@ const User: NextPage = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
 
-  const { posts } = useIndexForPosts();
+  const { posts } = usePosts();
   const { user, logout } = useAuth();
   const contributor = useShowForUser();
   const { update } = useUsers();

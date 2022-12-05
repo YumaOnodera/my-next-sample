@@ -21,4 +21,9 @@ type StorePost = (params: {
   setErrors: SetErrors;
 }) => Promise<void>;
 
-export type { Post, Posts, StorePost };
+type UpdatePost = (params: {
+  text: string;
+  setErrors: SetErrors;
+}) => Promise<void>;
+
+export type { Post, Posts, StorePost, UpdatePost };

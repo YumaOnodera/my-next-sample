@@ -1,19 +1,40 @@
 import Head from "next/head";
-import React from "react";
-import { useDispatch } from "react-redux";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
+import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
-import { useShowForPost } from "hooks/posts/swr/useShowForPost";
+import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
-import { setUserId } from "store/modules/postSearch";
+import { useShowForUser } from "hooks/users/swr/useShowForUser";
 
 import type { NextPage } from "next";
+import type { Errors } from "types/errors";
 
 const Post: NextPage = () => {
-  const dispatch = useDispatch();
+  const [errors, setErrors] = useState<Errors>([]);
+  const [isEditable, setIsEditable] = useState(false);
+  const [text, setText] = useState("");
 
-  const { logout } = useAuth();
-  const post = useShowForPost();
+  const { post, updatePost } = usePosts();
+  const { user, logout } = useAuth();
+  const contributor = useShowForUser();
+
+  const toggleEditable = () => {
+    setIsEditable((prev) => !prev);
+  };
+
+  const submitForm = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    await updatePost({ text, setErrors });
+
+    toggleEditable();
+  };
+
+  useEffect(() => {
+    post && setText(post.text);
+  }, [post]);
 
   return (
     <>
@@ -24,17 +45,36 @@ const Post: NextPage = () => {
       </Head>
 
       <AppLayout>
+        {/* Validation Errors */}
+        <AuthValidationErrors errors={errors} />
+
         <button type="button" onClick={logout}>
           Logout
         </button>
 
-        {post && (
-          <div>
-            <div>{post.text}</div>
-            <div onClick={() => dispatch(setUserId(post.user_id))}>
-              {post.created_by}
-            </div>
-          </div>
+        {isEditable ? (
+          <form onSubmit={submitForm}>
+            <textarea
+              id="name"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+            <button type="submit">保存</button>
+          </form>
+        ) : (
+          <>
+            {user?.id === contributor?.id && (
+              <button onClick={toggleEditable}>編集</button>
+            )}
+            {post && (
+              <>
+                <div>{post.text}</div>
+                <Link href={`/${post.user_id}`}>
+                  <a>{post.created_by}</a>
+                </Link>
+              </>
+            )}
+          </>
         )}
       </AppLayout>
     </>

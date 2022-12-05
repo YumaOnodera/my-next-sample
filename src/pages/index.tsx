@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import GuestLayout from "components/Layouts/GuestLayout";
-import { useIndexForPosts } from "hooks/posts/swr/useIndexForPosts";
 import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
 import { toggleModal } from "store/modules/postModal";
@@ -28,8 +27,7 @@ const Home: NextPage = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
 
-  const { posts } = useIndexForPosts();
-  const { storePost } = usePosts();
+  const { posts, storePost } = usePosts();
   const { user, logout } = useAuth();
 
   const submitForm = async (e: { preventDefault: () => void }) => {
