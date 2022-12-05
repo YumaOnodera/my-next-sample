@@ -61,6 +61,15 @@ export const usePosts = () => {
       });
   };
 
+  const deletePost = async () => {
+    axios
+      .delete(`/api/posts/${router.query.post}`)
+      .then(() => router.push("/"))
+      .catch((error) => {
+        throw error;
+      });
+  };
+
   useEffect(() => {
     error && router.push("/404");
   }, [error, router]);
@@ -75,5 +84,6 @@ export const usePosts = () => {
     post,
     storePost,
     updatePost,
+    deletePost,
   };
 };

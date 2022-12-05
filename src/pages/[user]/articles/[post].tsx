@@ -17,7 +17,7 @@ const Post: NextPage = () => {
   const [text, setText] = useState("");
 
   const { auth, logout } = useAuth();
-  const { post, updatePost } = usePosts();
+  const { post, updatePost, deletePost } = usePosts();
   const { user } = useUsers();
 
   const toggleEditable = () => {
@@ -30,6 +30,10 @@ const Post: NextPage = () => {
     await updatePost({ text, setErrors });
 
     toggleEditable();
+  };
+
+  const deleteConfirm = async () => {
+    window.confirm("投稿を削除しますか？") && (await deletePost());
   };
 
   useEffect(() => {
@@ -64,7 +68,10 @@ const Post: NextPage = () => {
         ) : (
           <>
             {auth?.id === user?.id && (
-              <button onClick={toggleEditable}>編集</button>
+              <>
+                <button onClick={toggleEditable}>編集</button>
+                <button onClick={deleteConfirm}>削除</button>
+              </>
             )}
             {post && (
               <>
