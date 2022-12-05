@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,10 +11,10 @@ import { useIndexForPosts } from "hooks/posts/swr/useIndexForPosts";
 import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
 import { toggleModal } from "store/modules/postModal";
-import { setKeyword, setOrder, setUserId } from "store/modules/postSearch";
-import { RootState } from "store/types/rootState";
+import { setKeyword, setOrder } from "store/modules/postSearch";
 
 import type { NextPage } from "next";
+import type { RootState } from "store/types/rootState";
 import type { Errors } from "types/errors";
 
 const Home: NextPage = () => {
@@ -27,9 +28,9 @@ const Home: NextPage = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
 
-  const { user, logout } = useAuth();
-  const { storePost } = usePosts();
   const { posts } = useIndexForPosts();
+  const { storePost } = usePosts();
+  const { user, logout } = useAuth();
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -48,7 +49,6 @@ const Home: NextPage = () => {
     dispatch(setKeyword(searchText));
     dispatch(setOrder(order));
 
-    setKeyword("");
     setSearchBarOpen(false);
   };
 
@@ -106,17 +106,18 @@ const Home: NextPage = () => {
 
             {posts?.data.map((post) => {
               return (
-                <div
-                  key={post.id}
-                  onClick={() =>
-                    router.push(`/${post.user_id}/articles/${post.id}`)
-                  }
-                >
+                <div key={post.id}>
                   <hr />
-                  <div>{post.text}</div>
-                  <div onClick={() => dispatch(setUserId(post.user_id))}>
-                    {post.created_by}
+                  <div
+                    onClick={() =>
+                      router.push(`/${post.user_id}/articles/${post.id}`)
+                    }
+                  >
+                    {post.text}
                   </div>
+                  <Link href={`/${post.user_id}`}>
+                    <a>{post.created_by}</a>
+                  </Link>
                 </div>
               );
             })}

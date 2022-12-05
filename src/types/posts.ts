@@ -1,5 +1,4 @@
-import { SetErrors } from "./errors";
-
+import type { SetErrors } from "types/errors";
 import type { Paginate } from "types/paginate";
 
 type Post = {

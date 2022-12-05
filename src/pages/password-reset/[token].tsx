@@ -1,4 +1,3 @@
-import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -7,6 +6,7 @@ import AuthValidationErrors from "components/AuthValidationErrors";
 import GuestLayout from "components/Layouts/GuestLayout";
 import { useAuth } from "hooks/useAuth";
 
+import type { NextPage } from "next";
 import type { Errors } from "types/errors";
 import type { Status } from "types/status";
 

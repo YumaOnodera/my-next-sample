@@ -22,7 +22,7 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
           </div>
 
           <div>
-            <Link href="/profile">
+            <Link href={`/${user?.id}`}>
               <a>プロフィール / {user?.name}</a>
             </Link>
           </div>
