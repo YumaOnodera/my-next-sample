@@ -8,7 +8,7 @@ import { reset } from "store/modules/postSearch";
 
 const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch();
-  const { user } = useAuth({ middleware: "auth" });
+  const { auth } = useAuth({ middleware: "auth" });
 
   return (
     <div>
@@ -22,8 +22,8 @@ const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
           </div>
 
           <div>
-            <Link href={`/${user?.id}`}>
-              <a>プロフィール / {user?.name}</a>
+            <Link href={`/${auth?.id}`}>
+              <a>プロフィール / {auth?.name}</a>
             </Link>
           </div>
 

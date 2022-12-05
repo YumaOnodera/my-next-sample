@@ -6,10 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
-import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
-import { useShowForUser } from "hooks/users/swr/useShowForUser";
-import { useUsers } from "hooks/users/useUsers";
+import { usePosts } from "hooks/usePosts";
+import { useUsers } from "hooks/useUsers";
 import { setKeyword, setOrder } from "store/modules/postSearch";
 
 import type { NextPage } from "next";
@@ -28,10 +27,9 @@ const User: NextPage = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
 
+  const { auth, logout } = useAuth();
   const { posts } = usePosts();
-  const { user, logout } = useAuth();
-  const contributor = useShowForUser();
-  const { update } = useUsers();
+  const { user, update } = useUsers();
 
   const submitSearch = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -57,8 +55,8 @@ const User: NextPage = () => {
   };
 
   useEffect(() => {
-    contributor && setName(contributor.name);
-  }, [contributor]);
+    user && setName(user.name);
+  }, [user]);
 
   return (
     <>
@@ -110,7 +108,7 @@ const User: NextPage = () => {
         ) : (
           <div>
             <h2>{name}</h2>
-            {user?.id === contributor?.id && (
+            {auth?.id === user?.id && (
               <button onClick={toggleEditable}>編集</button>
             )}
           </div>

@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 
-import { useConfig } from "hooks/swr/useConfig";
-import { useFetcher } from "hooks/swr/useFetcher";
 import { useFormat } from "hooks/useFormat";
+import { useSwrConfig } from "hooks/useSwrConfig";
+import { useSwrFetcher } from "hooks/useSwrFetcher";
 import axios from "libs/axios";
 import { reset, setUserId } from "store/modules/postSearch";
 import { Post, Posts } from "types/posts";
@@ -20,11 +20,9 @@ export const usePosts = () => {
   const { createQuery, objectValuesToString } = useFormat();
 
   const { data: posts, mutate: mutateIndex } = useSWR<Posts>(
-    Object.keys(router.query).length === 0
-      ? `/api/posts?${createQuery(state.postSearch)}`
-      : null,
-    useFetcher,
-    useConfig()
+    !router.query.post ? `/api/posts?${createQuery(state.postSearch)}` : null,
+    useSwrFetcher,
+    useSwrConfig()
   );
 
   const {
@@ -33,11 +31,13 @@ export const usePosts = () => {
     error,
   } = useSWR<Post>(
     router.query.post ? `/api/posts/${router.query.post}` : null,
-    useFetcher,
-    useConfig()
+    useSwrFetcher,
+    useSwrConfig()
   );
 
   const storePost: StorePost = async ({ setErrors, ...props }) => {
+    setErrors([]);
+
     axios
       .post("/api/posts", props)
       .then(() => mutateIndex())
@@ -49,6 +49,8 @@ export const usePosts = () => {
   };
 
   const updatePost: UpdatePost = async ({ setErrors, ...props }) => {
+    setErrors([]);
+
     axios
       .put(`/api/posts/${router.query.post}`, props)
       .then(() => mutateShow())

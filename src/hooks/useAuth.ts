@@ -4,6 +4,7 @@ import useSWR from "swr";
 
 import { useCsrf } from "hooks/useCsrf";
 import { useFormat } from "hooks/useFormat";
+import { useSwrConfig } from "hooks/useSwrConfig";
 import axios from "libs/axios";
 
 import type {
@@ -33,7 +34,11 @@ export const useAuth = (props?: AuthProps) => {
         router.push("/verify-email");
       });
 
-  const { data: user, error, mutate } = useSWR<User>("/api/user", fetcher);
+  const {
+    data: auth,
+    error,
+    mutate,
+  } = useSWR<User>("/api/user", fetcher, useSwrConfig());
 
   const register: Register = async ({ setErrors, ...props }) => {
     await csrf();
@@ -160,20 +165,20 @@ export const useAuth = (props?: AuthProps) => {
   }, [error, mutate]);
 
   useEffect(() => {
-    if (props?.middleware === "guest" && props.redirectIfAuthenticated && user)
+    if (props?.middleware === "guest" && props.redirectIfAuthenticated && auth)
       router.push(props.redirectIfAuthenticated);
     if (props?.middleware === "auth" && error) logout();
   }, [
+    auth,
     error,
     logout,
     props?.middleware,
     props?.redirectIfAuthenticated,
     router,
-    user,
   ]);
 
   return {
-    user,
+    auth,
     mutate,
     register,
     restoreToken,

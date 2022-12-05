@@ -1,4 +1,4 @@
-export const useConfig = () => {
+export const useSwrConfig = () => {
   return {
     revalidateOnFocus: false,
   };

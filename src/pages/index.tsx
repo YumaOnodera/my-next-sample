@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import GuestLayout from "components/Layouts/GuestLayout";
-import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
+import { usePosts } from "hooks/usePosts";
 import { toggleModal } from "store/modules/postModal";
 import { setKeyword, setOrder } from "store/modules/postSearch";
 
@@ -27,8 +27,8 @@ const Home: NextPage = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
 
+  const { auth, logout } = useAuth();
   const { posts, storePost } = usePosts();
-  const { user, logout } = useAuth();
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -52,7 +52,7 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      {user ? (
+      {auth ? (
         <>
           <Head>
             <title>Create Next App</title>

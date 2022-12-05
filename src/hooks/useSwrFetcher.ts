@@ -1,7 +1,7 @@
 import { useFormat } from "hooks/useFormat";
 import axios from "libs/axios";
 
-export const useFetcher = async (url: string) => {
+export const useSwrFetcher = async (url: string) => {
   const { objectValuesToString } = useFormat();
 
   return axios

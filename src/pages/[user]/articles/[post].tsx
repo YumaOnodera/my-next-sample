@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
-import { usePosts } from "hooks/posts/usePosts";
 import { useAuth } from "hooks/useAuth";
-import { useShowForUser } from "hooks/users/swr/useShowForUser";
+import { usePosts } from "hooks/usePosts";
+import { useUsers } from "hooks/useUsers";
 
 import type { NextPage } from "next";
 import type { Errors } from "types/errors";
@@ -16,9 +16,9 @@ const Post: NextPage = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [text, setText] = useState("");
 
+  const { auth, logout } = useAuth();
   const { post, updatePost } = usePosts();
-  const { user, logout } = useAuth();
-  const contributor = useShowForUser();
+  const { user } = useUsers();
 
   const toggleEditable = () => {
     setIsEditable((prev) => !prev);
@@ -63,7 +63,7 @@ const Post: NextPage = () => {
           </form>
         ) : (
           <>
-            {user?.id === contributor?.id && (
+            {auth?.id === user?.id && (
               <button onClick={toggleEditable}>編集</button>
             )}
             {post && (
