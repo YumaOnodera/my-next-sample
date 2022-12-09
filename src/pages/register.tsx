@@ -2,23 +2,20 @@ import Link from "next/link";
 import { useState } from "react";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
-import GuestLayout from "components/Layouts/GuestLayout";
+import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 
 import type { NextPage } from "next";
 import type { Errors } from "types/errors";
 
 const Register: NextPage = () => {
-  const { register } = useAuth({
-    middleware: "guest",
-    redirectIfAuthenticated: "/",
-  });
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [errors, setErrors] = useState<Errors>([]);
+
+  const { register } = useAuth("guest");
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -33,7 +30,7 @@ const Register: NextPage = () => {
   };
 
   return (
-    <GuestLayout>
+    <AppLayout title="会員登録" description="会員登録画面">
       {/* Validation Errors */}
       <AuthValidationErrors errors={errors} />
 
@@ -96,7 +93,7 @@ const Register: NextPage = () => {
           <button type="submit">Register</button>
         </div>
       </form>
-    </GuestLayout>
+    </AppLayout>
   );
 };
 

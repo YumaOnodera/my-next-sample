@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
-import GuestLayout from "components/Layouts/GuestLayout";
+import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 
 import type { NextPage } from "next";
@@ -12,14 +12,11 @@ import type { Errors } from "types/errors";
 const Restore: NextPage = () => {
   const router = useRouter();
 
-  const { restore } = useAuth({
-    middleware: "guest",
-    redirectIfAuthenticated: "/",
-  });
-
   const [restoreToken, setRestoreToken] = useState("");
   const [errors, setErrors] = useState<Errors>([]);
   const [restoreCompleted, setRestoreCompleted] = useState(false);
+
+  const { restore } = useAuth("guest");
 
   useEffect(() => {
     const token = router.query.token?.toString();
@@ -41,7 +38,7 @@ const Restore: NextPage = () => {
   };
 
   return (
-    <GuestLayout>
+    <AppLayout title="アカウント復活" description="アカウント復活画面">
       {/* Validation Errors */}
       <AuthValidationErrors errors={errors} />
 
@@ -66,7 +63,7 @@ const Restore: NextPage = () => {
           </form>
         </>
       )}
-    </GuestLayout>
+    </AppLayout>
   );
 };
 

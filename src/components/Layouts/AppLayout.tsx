@@ -1,37 +1,25 @@
-import Link from "next/link";
-import React, { ReactNode } from "react";
-import { useDispatch } from "react-redux";
+import Head from "next/head";
+import React from "react";
 
-import { useAuth } from "hooks/useAuth";
-import { toggleModal } from "store/modules/postModal";
-import { reset } from "store/modules/postSearch";
+import SideMenu from "components/SideMenu";
 
-const AppLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const dispatch = useDispatch();
-  const { auth } = useAuth({ middleware: "auth" });
+import type { AppLayoutProps } from "types/appLayoutProps";
 
+const AppLayout: React.FC<AppLayoutProps> = ({
+  title,
+  description,
+  auth,
+  children,
+}) => {
   return (
     <div>
-      {/* Page Heading */}
-      <header>
-        <nav>
-          <div onClick={() => dispatch(reset())}>
-            <Link href="/">
-              <a>ホーム</a>
-            </Link>
-          </div>
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-          <div>
-            <Link href={`/${auth?.id}`}>
-              <a>プロフィール / {auth?.name}</a>
-            </Link>
-          </div>
-
-          <div>その他</div>
-
-          <div onClick={() => dispatch(toggleModal())}>投稿</div>
-        </nav>
-      </header>
+      <SideMenu auth={auth} />
 
       {/* Page Content */}
       <main>{children}</main>

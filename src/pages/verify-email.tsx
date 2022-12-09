@@ -1,19 +1,21 @@
 import { useState } from "react";
 
-import GuestLayout from "components/Layouts/GuestLayout";
+import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 
 import type { Status } from "types/status";
 
 const VerifyEmail = () => {
-  const { logout, resendEmailVerification } = useAuth({
-    middleware: "auth",
-  });
+  const { auth, logout, resendEmailVerification } = useAuth("auth");
 
   const [status, setStatus] = useState<Status>(null);
 
   return (
-    <GuestLayout>
+    <AppLayout
+      title="メールアドレス確認"
+      description="メールアドレス確認画面"
+      auth={auth}
+    >
       <div>
         Thanks for signing up! Before getting started, could you verify your
         email address by clicking on the link we just emailed to you? If you
@@ -39,7 +41,7 @@ const VerifyEmail = () => {
           Logout
         </button>
       </div>
-    </GuestLayout>
+    </AppLayout>
   );
 };
 

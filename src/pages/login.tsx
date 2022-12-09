@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import AuthSessionStatus from "components/AuthSessionStatus";
 import AuthValidationErrors from "components/AuthValidationErrors";
-import GuestLayout from "components/Layouts/GuestLayout";
+import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 
 import type { NextPage } from "next";
@@ -14,15 +14,12 @@ import type { Status } from "types/status";
 const Login: NextPage = () => {
   const router = useRouter();
 
-  const { restoreToken, login } = useAuth({
-    middleware: "guest",
-    redirectIfAuthenticated: "/",
-  });
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Errors>([]);
   const [status, setStatus] = useState<Status>(null);
+
+  const { restoreToken, login } = useAuth("guest");
 
   useEffect(() => {
     const reset = router.query.reset?.toString();
@@ -50,7 +47,7 @@ const Login: NextPage = () => {
   };
 
   return (
-    <GuestLayout>
+    <AppLayout title="ログイン" description="ログイン画面">
       {/* Session Status */}
       <AuthSessionStatus status={status} />
 
@@ -101,7 +98,7 @@ const Login: NextPage = () => {
           <button type="submit">Login</button>
         </div>
       </form>
-    </GuestLayout>
+    </AppLayout>
   );
 };
 

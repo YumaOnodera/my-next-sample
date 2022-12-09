@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import AuthSessionStatus from "components/AuthSessionStatus";
 import AuthValidationErrors from "components/AuthValidationErrors";
-import GuestLayout from "components/Layouts/GuestLayout";
+import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 
 import type { NextPage } from "next";
@@ -13,7 +13,7 @@ import type { Status } from "types/status";
 const PasswordReset: NextPage = () => {
   const router = useRouter();
 
-  const { resetPassword } = useAuth({ middleware: "guest" });
+  const { resetPassword } = useAuth("guest");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +39,7 @@ const PasswordReset: NextPage = () => {
   }, [router]);
 
   return (
-    <GuestLayout>
+    <AppLayout title="パスワードリセット" description="パスワードリセット画面">
       {/* Session Status */}
       <AuthSessionStatus status={status} />
 
@@ -88,7 +88,7 @@ const PasswordReset: NextPage = () => {
           <button type="submit">Reset Password</button>
         </div>
       </form>
-    </GuestLayout>
+    </AppLayout>
   );
 };
 

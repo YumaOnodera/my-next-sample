@@ -4,12 +4,12 @@ const postModal = createSlice({
   name: "postModal",
   initialState: false,
   reducers: {
-    toggleModal(state) {
+    togglePostModal(state) {
       return !state;
     },
   },
 });
 
-export const { toggleModal } = postModal.actions;
+export const { togglePostModal } = postModal.actions;
 
 export default postModal.reducer;

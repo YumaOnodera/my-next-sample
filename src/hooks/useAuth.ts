@@ -8,7 +8,6 @@ import { useSwrConfig } from "hooks/useSwrConfig";
 import axios from "libs/axios";
 
 import type {
-  AuthProps,
   ForgotPassword,
   Login,
   Register,
@@ -19,7 +18,7 @@ import type {
   User,
 } from "types/auth";
 
-export const useAuth = (props?: AuthProps) => {
+export const useAuth = (middleware?: string) => {
   const router = useRouter();
   const csrf = useCsrf();
   const { objectValuesToString } = useFormat();
@@ -165,17 +164,9 @@ export const useAuth = (props?: AuthProps) => {
   }, [error, mutate]);
 
   useEffect(() => {
-    if (props?.middleware === "guest" && props.redirectIfAuthenticated && auth)
-      router.push(props.redirectIfAuthenticated);
-    if (props?.middleware === "auth" && error) logout();
-  }, [
-    auth,
-    error,
-    logout,
-    props?.middleware,
-    props?.redirectIfAuthenticated,
-    router,
-  ]);
+    if (middleware === "guest" && auth) router.push("/");
+    if (middleware === "auth" && error) logout();
+  }, [auth, error, logout, middleware, router]);
 
   return {
     auth,
