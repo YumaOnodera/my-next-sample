@@ -6,16 +6,18 @@ import { useAuth } from "hooks/useAuth";
 import type { NextPage } from "next";
 
 const Settings: NextPage = () => {
-  const { auth, logout } = useAuth("auth");
+  const { auth, logout } = useAuth();
 
   return (
     <AppLayout title="設定" description="設定画面" auth={auth}>
       <hr />
-      <div>
-        <Link href="/settings/accounts">
-          <a>アカウント</a>
-        </Link>
-      </div>
+      {auth && (
+        <div>
+          <Link href="/settings/accounts">
+            <a>アカウント</a>
+          </Link>
+        </div>
+      )}
       <div>
         <Link href="/">
           <a>プライバシーポリシー</a>
@@ -26,7 +28,7 @@ const Settings: NextPage = () => {
           <a>利用規約</a>
         </Link>
       </div>
-      <div onClick={logout}>ログアウト</div>
+      {auth && <div onClick={logout}>ログアウト</div>}
     </AppLayout>
   );
 };
