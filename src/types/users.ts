@@ -19,6 +19,7 @@ type Users =
   | null;
 
 type UpdateUser = (params: {
+  userId: number;
   name: string;
   setErrors: SetErrors;
 }) => Promise<void>;

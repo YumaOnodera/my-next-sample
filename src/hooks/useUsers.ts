@@ -28,7 +28,7 @@ export const useUsers = () => {
     setErrors([]);
 
     axios
-      .put("/api/users", props)
+      .put(`/api/users/${props.userId}`, props)
       .then(() => mutateShow())
       .catch((error) => {
         if (error.response.status !== 422) throw error;

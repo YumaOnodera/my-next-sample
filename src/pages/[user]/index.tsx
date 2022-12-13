@@ -49,7 +49,9 @@ const User: NextPage = () => {
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    await update({ name, setErrors });
+    if (!user) return;
+
+    await update({ userId: user.id, name, setErrors });
 
     toggleEditable();
   };
