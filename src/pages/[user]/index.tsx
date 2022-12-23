@@ -49,16 +49,16 @@ const User: NextPage = () => {
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    if (!user) return;
+    if (!auth) return;
 
-    await update({ userId: user.id, name, setErrors });
+    await update({ userId: auth.id, name, setErrors });
 
     toggleEditable();
   };
 
   useEffect(() => {
-    user && setName(user.name);
-  }, [user]);
+    auth && setName(auth.name);
+  }, [auth]);
 
   return (
     <AppLayout title={name} description="ユーザー画面" auth={auth}>

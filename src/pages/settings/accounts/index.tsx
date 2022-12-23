@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 
@@ -9,7 +11,9 @@ const Settings: NextPage = () => {
   return (
     <AppLayout title="アカウント" description="アカウント画面" auth={auth}>
       <hr />
-      <div>メールアドレス変更</div>
+      <Link href="/settings/accounts/email">
+        <a>メールアドレス変更</a>
+      </Link>
       <div>パスワード変更</div>
       <div>退会</div>
     </AppLayout>
