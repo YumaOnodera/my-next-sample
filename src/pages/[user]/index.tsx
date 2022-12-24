@@ -29,7 +29,7 @@ const User: NextPage = () => {
 
   const { auth } = useAuth();
   const { posts } = usePosts();
-  const { user, update } = useUsers();
+  const { user, updateUser } = useUsers();
 
   const submitSearch = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ const User: NextPage = () => {
 
     if (!auth) return;
 
-    await update({ userId: auth.id, name, setErrors });
+    await updateUser({ userId: auth.id, name, setErrors });
 
     toggleEditable();
   };

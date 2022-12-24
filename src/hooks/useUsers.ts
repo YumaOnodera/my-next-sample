@@ -24,7 +24,7 @@ export const useUsers = () => {
     useSwrConfig()
   );
 
-  const update: UpdateUser = async ({ setErrors, ...props }) => {
+  const updateUser: UpdateUser = async ({ setErrors, ...props }) => {
     setErrors([]);
 
     axios
@@ -43,6 +43,6 @@ export const useUsers = () => {
 
   return {
     user,
-    update,
+    updateUser,
   };
 };
