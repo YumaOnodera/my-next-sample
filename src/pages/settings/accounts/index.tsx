@@ -11,10 +11,16 @@ const Settings: NextPage = () => {
   return (
     <AppLayout title="アカウント" description="アカウント画面" auth={auth}>
       <hr />
-      <Link href="/settings/accounts/email">
-        <a>メールアドレス変更</a>
-      </Link>
-      <div>パスワード変更</div>
+      <div>
+        <Link href="/settings/accounts/email">
+          <a>メールアドレス変更</a>
+        </Link>
+      </div>
+      <div>
+        <Link href="/settings/accounts/password">
+          <a>パスワード変更</a>
+        </Link>
+      </div>
       <div>退会</div>
     </AppLayout>
   );

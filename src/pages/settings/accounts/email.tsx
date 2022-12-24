@@ -9,7 +9,7 @@ import { useEmailResets } from "hooks/useEmailResets";
 import type { NextPage } from "next";
 import type { Errors } from "types/errors";
 
-const Settings: NextPage = () => {
+const Email: NextPage = () => {
   const router = useRouter();
 
   const { auth, mutate } = useAuth("auth");
@@ -68,6 +68,7 @@ const Settings: NextPage = () => {
       {updateEmailCompleted && <div>メールアドレスを更新しました。</div>}
 
       <form onSubmit={submitForm}>
+        <label htmlFor="email">メールアドレス</label>
         <input
           id="email"
           type="text"
@@ -80,4 +81,4 @@ const Settings: NextPage = () => {
   );
 };
 
-export default Settings;
+export default Email;

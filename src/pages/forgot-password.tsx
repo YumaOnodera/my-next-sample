@@ -14,7 +14,7 @@ const ForgotPassword: NextPage = () => {
   const [errors, setErrors] = useState<Errors>([]);
   const [status, setStatus] = useState<Status>(null);
 
-  const { forgotPassword } = useAuth("guest");
+  const { forgotPassword } = useAuth();
 
   const submitForm = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
