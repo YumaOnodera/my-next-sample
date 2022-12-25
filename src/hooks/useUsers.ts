@@ -7,7 +7,7 @@ import { useSwrConfig } from "hooks/useSwrConfig";
 import { useSwrFetcher } from "hooks/useSwrFetcher";
 import axios from "libs/axios";
 
-import type { UpdateUser, User } from "types/users";
+import type { DeleteUser, UpdateUser, User } from "types/users";
 
 export const useUsers = () => {
   const router = useRouter();
@@ -37,6 +37,18 @@ export const useUsers = () => {
       });
   };
 
+  const deleteUser: DeleteUser = async ({ setErrors, ...props }) => {
+    setErrors([]);
+
+    axios
+      .delete(`/api/users/${props.userId}`, { data: props })
+      .catch((error) => {
+        if (error.response.status !== 422) throw error;
+
+        setErrors(objectValuesToString(error.response.data.message));
+      });
+  };
+
   useEffect(() => {
     error && router.push("/404");
   }, [error, router]);
@@ -44,5 +56,6 @@ export const useUsers = () => {
   return {
     user,
     updateUser,
+    deleteUser,
   };
 };

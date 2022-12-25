@@ -24,4 +24,10 @@ type UpdateUser = (params: {
   setErrors: SetErrors;
 }) => Promise<void>;
 
-export type { User, Users, UpdateUser };
+type DeleteUser = (params: {
+  userId: number;
+  password: string;
+  setErrors: SetErrors;
+}) => Promise<void>;
+
+export type { User, Users, UpdateUser, DeleteUser };

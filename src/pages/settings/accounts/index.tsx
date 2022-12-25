@@ -21,7 +21,11 @@ const Settings: NextPage = () => {
           <a>パスワード変更</a>
         </Link>
       </div>
-      <div>退会</div>
+      <div>
+        <Link href="/settings/accounts/remove">
+          <a>退会</a>
+        </Link>
+      </div>
     </AppLayout>
   );
 };
