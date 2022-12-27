@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 import { usePosts } from "hooks/usePosts";
@@ -63,6 +64,8 @@ const User: NextPage = () => {
   return (
     <AppLayout title={name} description="ユーザー画面" auth={auth}>
       <hr />
+      <AuthValidationErrors errors={errors} />
+
       <div>
         <button onClick={() => setSearchBarOpen((prev) => !prev)}>検索</button>
         {searchBarOpen && (

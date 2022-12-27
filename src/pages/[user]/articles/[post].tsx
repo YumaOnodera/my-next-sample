@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
+import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 import { usePosts } from "hooks/usePosts";
@@ -40,6 +41,9 @@ const Post: NextPage = () => {
 
   return (
     <AppLayout title="記事" description="記事画面" auth={auth}>
+      <hr />
+      <AuthValidationErrors errors={errors} />
+
       {isEditable ? (
         <form onSubmit={submitForm}>
           <textarea
