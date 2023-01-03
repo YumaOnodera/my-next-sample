@@ -3,11 +3,6 @@ import { Dispatch, SetStateAction } from "react";
 import type { SetErrors } from "types/errors";
 import type { SetStatus } from "types/status";
 
-type AuthProps = {
-  middleware?: string;
-  redirectIfAuthenticated?: string;
-};
-
 type User = {
   id: number;
   name: string;
@@ -30,40 +25,40 @@ type Register = (params: {
 type RestoreToken = (params: {
   email: string;
   password: string;
+  setStatus: SetStatus;
   setErrors: SetErrors;
-}) => Promise<string>;
+}) => Promise<void>;
 
 type Restore = (params: {
   restore_token: string;
-  setErrors: SetErrors;
   setRestoreCompleted: Dispatch<SetStateAction<boolean>>;
+  setErrors: SetErrors;
 }) => Promise<void>;
 
 type Login = (params: {
-  setErrors: SetErrors;
-  setStatus: SetStatus;
   email: string;
   password: string;
+  setStatus: SetStatus;
+  setErrors: SetErrors;
 }) => Promise<void>;
 
 type ForgotPassword = (params: {
-  setErrors: SetErrors;
-  setStatus: SetStatus;
   email: string;
+  setStatus: SetStatus;
+  setErrors: SetErrors;
 }) => Promise<void>;
 
 type ResetPassword = (params: {
-  setErrors: SetErrors;
-  setStatus: SetStatus;
   email: string;
   password: string;
   password_confirmation: string;
+  setStatus: SetStatus;
+  setErrors: SetErrors;
 }) => Promise<void>;
 
 type ResendEmailVerification = (params: { setStatus: SetStatus }) => void;
 
 export type {
-  AuthProps,
   User,
   Register,
   RestoreToken,

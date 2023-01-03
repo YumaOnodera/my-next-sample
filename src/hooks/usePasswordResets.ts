@@ -20,10 +20,10 @@ export const usePasswordResets = () => {
     axios
       .put(`/api/password-resets`, props)
       .then(() => {
-        setUpdatePasswordCompleted(true);
         setPassword("");
         setNewPassword("");
         setNewPasswordConfirmation("");
+        setUpdatePasswordCompleted(true);
       })
       .catch((error) => {
         if (error.response.status !== 422) throw error;

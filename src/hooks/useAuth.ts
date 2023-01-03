@@ -1,10 +1,9 @@
 import { useRouter } from "next/router";
-import { useCallback, useEffect } from "react";
 import useSWR from "swr";
 
 import { useCsrf } from "hooks/useCsrf";
 import { useFormat } from "hooks/useFormat";
-import { useSwrConfig } from "hooks/useSwrConfig";
+import { useSwrSettings } from "hooks/useSwrSettings";
 import axios from "libs/axios";
 
 import type {
@@ -18,10 +17,12 @@ import type {
   User,
 } from "types/auth";
 
-export const useAuth = (middleware?: string) => {
+export const useAuth = () => {
   const router = useRouter();
+
   const csrf = useCsrf();
   const { objectValuesToString } = useFormat();
+  const { config } = useSwrSettings();
 
   const fetcher = (url: string) =>
     axios
@@ -35,9 +36,9 @@ export const useAuth = (middleware?: string) => {
 
   const {
     data: auth,
-    error,
-    mutate,
-  } = useSWR<User>("/api/user", fetcher, useSwrConfig());
+    mutate: mutateAuth,
+    error: errorAuth,
+  } = useSWR<User>("/api/user", fetcher, config());
 
   const register: Register = async ({ setErrors, ...props }) => {
     await csrf();
@@ -46,7 +47,7 @@ export const useAuth = (middleware?: string) => {
 
     axios
       .post("/register", props)
-      .then(() => mutate())
+      .then(() => mutateAuth())
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 
@@ -54,14 +55,25 @@ export const useAuth = (middleware?: string) => {
       });
   };
 
-  const restoreToken: RestoreToken = async ({ setErrors, ...props }) => {
+  const restoreToken: RestoreToken = async ({
+    setErrors,
+    setStatus,
+    ...props
+  }) => {
     await csrf();
 
     setErrors([]);
+    setStatus("");
 
     return axios
       .post("/restore-token", props)
-      .then((response) => response.data.restore_token)
+      .then((response) => {
+        const token = response.data.restore_token;
+
+        token
+          ? router.push("/restore?token=" + token)
+          : login({ setErrors, setStatus, ...props });
+      })
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 
@@ -96,7 +108,7 @@ export const useAuth = (middleware?: string) => {
 
     axios
       .post("/login", props)
-      .then(() => mutate())
+      .then(() => mutateAuth())
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 
@@ -155,22 +167,18 @@ export const useAuth = (middleware?: string) => {
       .then((response) => setStatus(response.data.status));
   };
 
-  const logout = useCallback(async () => {
-    if (!error) {
-      await axios.post("/logout").then(() => mutate());
+  const logout = async () => {
+    if (!errorAuth) {
+      await axios.post("/logout").then(() => mutateAuth());
     }
 
     window.location.pathname = "/login";
-  }, [error, mutate]);
-
-  useEffect(() => {
-    if (middleware === "guest" && auth) router.push("/");
-    if (middleware === "auth" && error) logout();
-  }, [auth, error, logout, middleware, router]);
+  };
 
   return {
     auth,
-    mutate,
+    mutateAuth,
+    errorAuth,
     register,
     restoreToken,
     restore,

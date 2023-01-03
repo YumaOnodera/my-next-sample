@@ -1,16 +1,30 @@
 import Head from "next/head";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
+import PostModal from "components/PostModal";
 import SideMenu from "components/SideMenu";
+import { useAuth } from "hooks/useAuth";
 
 import type { AppLayoutProps } from "types/appLayoutProps";
 
 const AppLayout: React.FC<AppLayoutProps> = ({
   title,
   description,
-  auth,
+  middleware,
   children,
 }) => {
+  const router = useRouter();
+
+  const [postModalOpen, setPostModalOpen] = useState(false);
+
+  const { auth, errorAuth, logout } = useAuth();
+
+  useEffect(() => {
+    if (middleware === "guest" && auth) router.push("/");
+    if (middleware === "auth" && errorAuth) logout();
+  }, [auth, errorAuth, logout, middleware, router]);
+
   return (
     <div>
       <Head>
@@ -19,9 +33,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <SideMenu auth={auth} />
+      <SideMenu auth={auth} setPostModalOpen={setPostModalOpen} />
 
-      {/* Page Content */}
+      {postModalOpen && <PostModal setPostModalOpen={setPostModalOpen} />}
+
       <main>{children}</main>
     </div>
   );

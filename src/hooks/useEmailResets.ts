@@ -1,9 +1,13 @@
+import { useAuth } from "hooks/useAuth";
 import { useFormat } from "hooks/useFormat";
+import { useUsers } from "hooks/useUsers";
 import axios from "libs/axios";
 
 import type { SendEmailResetLink, UpdateEmail } from "types/emailResets";
 
 export const useEmailResets = () => {
+  const { mutateAuth } = useAuth();
+  const { mutateUser } = useUsers();
   const { objectValuesToString } = useFormat();
 
   const sendEmailResetLink: SendEmailResetLink = async ({
@@ -35,7 +39,11 @@ export const useEmailResets = () => {
 
     axios
       .put(`/api/email-resets/${props.token}`, props)
-      .then(() => setUpdateEmailCompleted(true))
+      .then(() => {
+        mutateAuth();
+        mutateUser();
+        setUpdateEmailCompleted(true);
+      })
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 
