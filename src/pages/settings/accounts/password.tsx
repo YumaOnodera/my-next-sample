@@ -2,23 +2,21 @@ import { useState } from "react";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
-import { useAuth } from "hooks/useAuth";
 import { usePasswordResets } from "hooks/usePasswordResets";
 
 import type { NextPage } from "next";
 import type { Errors } from "types/errors";
 
 const Password: NextPage = () => {
-  const { auth } = useAuth("auth");
-  const { updatePassword } = usePasswordResets();
-
   const [errors, setErrors] = useState<Errors>([]);
-  const [updatePasswordCompleted, setUpdatePasswordCompleted] = useState(false);
-  const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
+  const [password, setPassword] = useState("");
+  const [updatePasswordCompleted, setUpdatePasswordCompleted] = useState(false);
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const { updatePassword } = usePasswordResets();
+
+  const execUpdatePassword = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await updatePassword({
@@ -37,14 +35,14 @@ const Password: NextPage = () => {
     <AppLayout
       title="パスワード変更"
       description="パスワード変更画面"
-      auth={auth}
+      middleware="auth"
     >
       <hr />
       <AuthValidationErrors errors={errors} />
 
       {updatePasswordCompleted && <div>パスワードを更新しました。</div>}
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={execUpdatePassword}>
         <div>
           <label htmlFor="password">現在のパスワード</label>
           <input
@@ -54,6 +52,7 @@ const Password: NextPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+
         <div>
           <label htmlFor="newPassword">新しいパスワード</label>
           <input
@@ -63,6 +62,7 @@ const Password: NextPage = () => {
             onChange={(e) => setNewPassword(e.target.value)}
           />
         </div>
+
         <div>
           <label htmlFor="newPasswordConfirmation">
             新しいパスワードを確認
@@ -74,6 +74,7 @@ const Password: NextPage = () => {
             onChange={(e) => setNewPasswordConfirmation(e.target.value)}
           />
         </div>
+
         <button type="submit">送信</button>
       </form>
     </AppLayout>

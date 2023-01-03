@@ -13,15 +13,15 @@ import type { Status } from "types/status";
 const PasswordReset: NextPage = () => {
   const router = useRouter();
 
-  const { resetPassword } = useAuth("guest");
-
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState<Errors>([]);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [errors, setErrors] = useState<Errors>([]);
   const [status, setStatus] = useState<Status>(null);
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const { resetPassword } = useAuth();
+
+  const execResetPassword = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await resetPassword({
@@ -35,18 +35,23 @@ const PasswordReset: NextPage = () => {
 
   useEffect(() => {
     const email = router.query.email?.toString();
+
     setEmail(email || "");
   }, [router]);
 
   return (
-    <AppLayout title="パスワードリセット" description="パスワードリセット画面">
+    <AppLayout
+      title="パスワードリセット"
+      description="パスワードリセット画面"
+      middleware="guest"
+    >
       {/* Session Status */}
       <AuthSessionStatus status={status} />
 
       {/* Validation Errors */}
       <AuthValidationErrors errors={errors} />
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={execResetPassword}>
         {/* Email Address */}
         <div>
           <label htmlFor="email">Email</label>

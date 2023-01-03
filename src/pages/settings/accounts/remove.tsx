@@ -9,13 +9,13 @@ import type { NextPage } from "next";
 import type { Errors } from "types/errors";
 
 const Remove: NextPage = () => {
-  const { auth, logout } = useAuth("auth");
-  const { deleteUser } = useUsers();
-
   const [errors, setErrors] = useState<Errors>([]);
   const [password, setPassword] = useState("");
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const { auth, logout } = useAuth();
+  const { deleteUser } = useUsers();
+
+  const execDeleteUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (!auth) return;
@@ -23,17 +23,16 @@ const Remove: NextPage = () => {
     await deleteUser({
       userId: auth.id,
       password,
+      logout,
       setErrors,
     });
-
-    await logout();
   };
 
   return (
     <AppLayout
       title="アカウント削除"
       description="アカウント削除画面"
-      auth={auth}
+      middleware="auth"
     >
       <hr />
       <AuthValidationErrors errors={errors} />
@@ -45,7 +44,7 @@ const Remove: NextPage = () => {
         30日以降を過ぎますと、完全に削除されアカウントの復活はできませんのでご注意ください。
       </div>
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={execDeleteUser}>
         <div>
           <label htmlFor="password">現在のパスワード</label>
           <input
@@ -55,6 +54,7 @@ const Remove: NextPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+
         <button type="submit">退会する</button>
       </form>
     </AppLayout>

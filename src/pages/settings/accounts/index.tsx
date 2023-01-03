@@ -1,15 +1,16 @@
 import Link from "next/link";
 
 import AppLayout from "components/Layouts/AppLayout";
-import { useAuth } from "hooks/useAuth";
 
 import type { NextPage } from "next";
 
 const Settings: NextPage = () => {
-  const { auth } = useAuth("auth");
-
   return (
-    <AppLayout title="アカウント" description="アカウント画面" auth={auth}>
+    <AppLayout
+      title="アカウント"
+      description="アカウント画面"
+      middleware="auth"
+    >
       <hr />
       <div>
         <Link href="/settings/accounts/email">

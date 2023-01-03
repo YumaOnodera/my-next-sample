@@ -9,7 +9,7 @@ const Settings: NextPage = () => {
   const { auth, logout } = useAuth();
 
   return (
-    <AppLayout title="設定" description="設定画面" auth={auth}>
+    <AppLayout title="設定" description="設定画面">
       <hr />
       {auth && (
         <div>

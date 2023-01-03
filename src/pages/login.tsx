@@ -15,14 +15,26 @@ const Login: NextPage = () => {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Errors>([]);
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState<Status>(null);
 
-  const { restoreToken, login } = useAuth("guest");
+  const { restoreToken } = useAuth();
+
+  const execRestoreToken = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    await restoreToken({
+      email,
+      password,
+      setStatus,
+      setErrors,
+    });
+  };
 
   useEffect(() => {
     const reset = router.query.reset?.toString();
+
     if (reset && errors.length === 0) {
       setStatus(decodeURIComponent(window.atob(reset)));
     } else {
@@ -30,31 +42,15 @@ const Login: NextPage = () => {
     }
   }, [router, errors]);
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    const token = await restoreToken({
-      email,
-      password,
-      setErrors,
-    });
-
-    if (token) {
-      await router.push("/restore?token=" + token);
-    } else {
-      await login({ email, password, setErrors, setStatus });
-    }
-  };
-
   return (
-    <AppLayout title="ログイン" description="ログイン画面">
+    <AppLayout title="ログイン" description="ログイン画面" middleware="guest">
       {/* Session Status */}
       <AuthSessionStatus status={status} />
 
       {/* Validation Errors */}
       <AuthValidationErrors errors={errors} />
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={execRestoreToken}>
         {/* Email Address */}
         <div>
           <label htmlFor="email">Email</label>

@@ -23,7 +23,7 @@ const Post: NextPage = () => {
     setIsEditable((prev) => !prev);
   };
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const execUpdatePost = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await updatePost({ text, setErrors });
@@ -40,12 +40,12 @@ const Post: NextPage = () => {
   }, [post]);
 
   return (
-    <AppLayout title="記事" description="記事画面" auth={auth}>
+    <AppLayout title="記事" description="記事画面">
       <hr />
       <AuthValidationErrors errors={errors} />
 
       {isEditable ? (
-        <form onSubmit={submitForm}>
+        <form onSubmit={execUpdatePost}>
           <textarea
             id="name"
             value={text}

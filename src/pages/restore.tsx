@@ -12,22 +12,13 @@ import type { Errors } from "types/errors";
 const Restore: NextPage = () => {
   const router = useRouter();
 
-  const [restoreToken, setRestoreToken] = useState("");
   const [errors, setErrors] = useState<Errors>([]);
   const [restoreCompleted, setRestoreCompleted] = useState(false);
+  const [restoreToken, setRestoreToken] = useState("");
 
-  const { restore } = useAuth("guest");
+  const { restore } = useAuth();
 
-  useEffect(() => {
-    const token = router.query.token?.toString();
-    if (token) {
-      setRestoreToken(token);
-    } else {
-      router.push("/404");
-    }
-  }, [router]);
-
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const execRestore = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await restore({
@@ -37,8 +28,22 @@ const Restore: NextPage = () => {
     });
   };
 
+  useEffect(() => {
+    const token = router.query.token?.toString();
+
+    if (token) {
+      setRestoreToken(token);
+    } else {
+      router.push("/404");
+    }
+  }, [router]);
+
   return (
-    <AppLayout title="アカウント復活" description="アカウント復活画面">
+    <AppLayout
+      title="アカウント復活"
+      description="アカウント復活画面"
+      middleware="guest"
+    >
       {/* Validation Errors */}
       <AuthValidationErrors errors={errors} />
 
@@ -58,7 +63,7 @@ const Restore: NextPage = () => {
             アカウントの復活を希望する場合は「復活する」をクリックしてください。
           </div>
 
-          <form onSubmit={submitForm}>
+          <form onSubmit={execRestore}>
             <button type="submit">復活する</button>
           </form>
         </>

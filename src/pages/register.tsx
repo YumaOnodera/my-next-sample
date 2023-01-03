@@ -9,15 +9,15 @@ import type { NextPage } from "next";
 import type { Errors } from "types/errors";
 
 const Register: NextPage = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState<Errors>([]);
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [errors, setErrors] = useState<Errors>([]);
 
-  const { register } = useAuth("guest");
+  const { register } = useAuth();
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const execRegister = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await register({
@@ -30,11 +30,11 @@ const Register: NextPage = () => {
   };
 
   return (
-    <AppLayout title="会員登録" description="会員登録画面">
+    <AppLayout title="会員登録" description="会員登録画面" middleware="guest">
       {/* Validation Errors */}
       <AuthValidationErrors errors={errors} />
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={execRegister}>
         {/* Name */}
         <div>
           <label htmlFor="name">Name</label>

@@ -6,15 +6,15 @@ import { useAuth } from "hooks/useAuth";
 import type { Status } from "types/status";
 
 const VerifyEmail = () => {
-  const { auth, logout, resendEmailVerification } = useAuth("auth");
-
   const [status, setStatus] = useState<Status>(null);
+
+  const { logout, resendEmailVerification } = useAuth();
 
   return (
     <AppLayout
       title="メールアドレス確認"
       description="メールアドレス確認画面"
-      auth={auth}
+      middleware="auth"
     >
       <div>
         Thanks for signing up! Before getting started, could you verify your

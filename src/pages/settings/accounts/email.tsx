@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
@@ -12,15 +12,15 @@ import type { Errors } from "types/errors";
 const Email: NextPage = () => {
   const router = useRouter();
 
-  const { auth, mutate } = useAuth("auth");
-  const { sendEmailResetLink, updateEmail } = useEmailResets();
-
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<Errors>([]);
   const [sendResetLinkCompleted, setSendResetLinkCompleted] = useState(false);
   const [updateEmailCompleted, setUpdateEmailCompleted] = useState(false);
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const { auth } = useAuth();
+  const { sendEmailResetLink, updateEmail } = useEmailResets();
+
+  const execSendEmailResetLink = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await sendEmailResetLink({
@@ -31,15 +31,13 @@ const Email: NextPage = () => {
     });
   };
 
-  const execUpdateEmail = async (token: string) => {
+  const execUpdateEmail = useCallback(async (token: string) => {
     await updateEmail({
       token,
       setUpdateEmailCompleted,
       setErrors,
     });
-
-    await mutate();
-  };
+  }, []);
 
   useEffect(() => {
     auth?.email && setEmail(auth.email);
@@ -49,13 +47,13 @@ const Email: NextPage = () => {
     const token = router.query.token?.toString();
 
     token && execUpdateEmail(token);
-  }, [router.query.token]);
+  }, [execUpdateEmail, router.query.token]);
 
   return (
     <AppLayout
       title="メールアドレス変更"
       description="メールアドレス変更画面"
-      auth={auth}
+      middleware="auth"
     >
       <hr />
       <AuthValidationErrors errors={errors} />
@@ -67,7 +65,7 @@ const Email: NextPage = () => {
       )}
       {updateEmailCompleted && <div>メールアドレスを更新しました。</div>}
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={execSendEmailResetLink}>
         <label htmlFor="email">メールアドレス</label>
         <input
           id="email"

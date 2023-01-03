@@ -16,7 +16,7 @@ const ForgotPassword: NextPage = () => {
 
   const { forgotPassword } = useAuth();
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const execForgotPassword = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     await forgotPassword({ email, setErrors, setStatus });
@@ -26,6 +26,7 @@ const ForgotPassword: NextPage = () => {
     <AppLayout
       title="パスワードリセットリンク送信"
       description="パスワードリセットリンク送信画面"
+      middleware="guest"
     >
       <div>
         Forgot your password? No problem. Just let us know your email address
@@ -39,7 +40,7 @@ const ForgotPassword: NextPage = () => {
       {/* Validation Errors */}
       <AuthValidationErrors errors={errors} />
 
-      <form onSubmit={submitForm}>
+      <form onSubmit={execForgotPassword}>
         {/* Email Address */}
         <div>
           <label htmlFor="email">Email</label>
