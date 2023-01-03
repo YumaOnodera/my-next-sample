@@ -1,19 +1,14 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-
-import { togglePostModal } from "store/modules/postModal";
-import { reset } from "store/modules/postSearch";
 
 import type { SideMenuProps } from "types/sideMenuProps";
 
-const SideMenu: React.FC<SideMenuProps> = ({ auth }) => {
-  const dispatch = useDispatch();
+const SideMenu: React.FC<SideMenuProps> = ({ setPostModalOpen, auth }) => {
   const [othersMenuOpen, setOthersMenuOpen] = useState(false);
 
   return (
     <nav>
-      <div onClick={() => dispatch(reset())}>
+      <div>
         <Link href="/">
           <a>ホーム</a>
         </Link>
@@ -27,7 +22,10 @@ const SideMenu: React.FC<SideMenuProps> = ({ auth }) => {
             </Link>
           </div>
 
-          <button type="button" onClick={() => dispatch(togglePostModal())}>
+          <button
+            type="button"
+            onClick={() => setPostModalOpen((prev) => !prev)}
+          >
             投稿
           </button>
         </>
