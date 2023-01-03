@@ -1,53 +1,65 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import { useAuth } from "hooks/useAuth";
 import { usePosts } from "hooks/usePosts";
+import { useSearch } from "hooks/useSearch";
 import { useUsers } from "hooks/useUsers";
-import { setKeyword, setOrder } from "store/modules/postSearch";
 
 import type { NextPage } from "next";
-import type { RootState } from "store/types/rootState";
 import type { Errors } from "types/errors";
 
 const User: NextPage = () => {
   const router = useRouter();
 
   const [errors, setErrors] = useState<Errors>([]);
-  const [inputPost, setInputPost] = useState("");
   const [isEditable, setIsEditable] = useState(false);
+  const [keyword, setKeyword] = useState("");
   const [name, setName] = useState("");
   const [searchBarOpen, setSearchBarOpen] = useState(false);
+  const [sort, setSort] = useState("");
   const [sortSelectionOpen, setSortSelectionOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
-
-  const dispatch = useDispatch();
-  const state = useSelector((state: RootState) => state);
 
   const { auth } = useAuth();
   const { posts } = usePosts();
+  const { searchAction } = useSearch();
   const { user, updateUser } = useUsers();
 
-  const submitSearch = async (e: { preventDefault: () => void }) => {
+  const execSearch = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    const order = searchText ? "" : "created_at:desc";
+    const user = router.query.user;
 
-    dispatch(setKeyword(searchText));
-    dispatch(setOrder(order));
+    await searchAction({
+      keyword,
+      user,
+      setSort,
+      setSearchBarOpen,
+      setSortSelectionOpen,
+    });
+  };
 
-    setSearchBarOpen(false);
+  const execSort = async (sortValue: string) => {
+    const user = router.query.user;
+
+    await searchAction({
+      keyword,
+      user,
+      sortValue,
+      setSort,
+      setSearchBarOpen,
+      setSortSelectionOpen,
+    });
   };
 
   const toggleEditable = () => {
     setIsEditable((prev) => !prev);
   };
 
-  const submitForm = async (e: { preventDefault: () => void }) => {
+  const execUpdateUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (!auth) return;
@@ -62,19 +74,19 @@ const User: NextPage = () => {
   }, [auth]);
 
   return (
-    <AppLayout title={name} description="ユーザー画面" auth={auth}>
+    <AppLayout title={name} description="ユーザー画面">
       <hr />
       <AuthValidationErrors errors={errors} />
 
       <div>
         <button onClick={() => setSearchBarOpen((prev) => !prev)}>検索</button>
         {searchBarOpen && (
-          <form onSubmit={submitSearch}>
+          <form onSubmit={execSearch}>
             <input
               id="search"
               type="text"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
             />
           </form>
         )}
@@ -83,10 +95,7 @@ const User: NextPage = () => {
           ソート
         </button>
         {sortSelectionOpen && (
-          <select
-            value={state.postSearch.order_by + ":" + state.postSearch.order}
-            onChange={(e) => dispatch(setOrder(e.target.value))}
-          >
+          <select value={sort} onChange={(e) => execSort(e.target.value)}>
             <option value="">関連度順</option>
             <option value="created_at:desc">作成日が新しい順</option>
             <option value="created_at:asc">作成日が古い順</option>
@@ -95,7 +104,7 @@ const User: NextPage = () => {
       </div>
 
       {isEditable ? (
-        <form onSubmit={submitForm}>
+        <form onSubmit={execUpdateUser}>
           <input
             id="name"
             type="text"
@@ -111,17 +120,6 @@ const User: NextPage = () => {
             <button onClick={toggleEditable}>編集</button>
           )}
         </div>
-      )}
-
-      {state.postModal && (
-        <form onSubmit={submitForm}>
-          <textarea
-            id="name"
-            value={inputPost}
-            onChange={(e) => setInputPost(e.target.value)}
-          />
-          <button type="submit">投稿</button>
-        </form>
       )}
 
       {posts?.data.map((post) => {
