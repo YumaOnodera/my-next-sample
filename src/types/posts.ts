@@ -1,3 +1,4 @@
+import type { Comments } from "types/comments";
 import type { SetErrors } from "types/errors";
 import type { Paginate } from "types/paginate";
 
@@ -5,6 +6,7 @@ type Post = {
   id: number;
   user_id: number;
   text: string;
+  comments: Comments;
   created_by: string;
   created_at: string;
   updated_at: string;
