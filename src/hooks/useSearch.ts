@@ -9,28 +9,18 @@ export const useSearch = () => {
   const searchAction: SearchAction = async ({
     keyword,
     user,
-    sortValue,
-    setSort,
+    order,
     setSearchBarOpen,
     setSortSelectionOpen,
   }) => {
+    setSearchBarOpen(false);
+    setSortSelectionOpen(false);
+
     const query: SearchQuery = {};
 
     if (keyword) query["keyword"] = keyword;
     if (user) query["user"] = user;
-
-    let orderValues = ["", ""];
-
-    if (sortValue) {
-      orderValues = sortValue.split(":");
-      query["order_by"] = orderValues[0];
-      query["order"] = orderValues[1];
-    }
-
-    if (sortValue || sortValue === "") setSort(sortValue);
-
-    setSearchBarOpen(false);
-    setSortSelectionOpen(false);
+    if (order) query["order"] = order;
 
     await router.push({
       query,

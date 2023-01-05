@@ -19,8 +19,8 @@ const User: NextPage = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState("");
+  const [order, setOrder] = useState("");
   const [searchBarOpen, setSearchBarOpen] = useState(false);
-  const [sort, setSort] = useState("");
   const [sortSelectionOpen, setSortSelectionOpen] = useState(false);
 
   const { auth } = useAuth();
@@ -31,25 +31,23 @@ const User: NextPage = () => {
   const execSearch = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    const user = router.query.user;
+    setOrder("");
 
     await searchAction({
       keyword,
-      user,
-      setSort,
+      user: router.query.user,
       setSearchBarOpen,
       setSortSelectionOpen,
     });
   };
 
-  const execSort = async (sortValue: string) => {
-    const user = router.query.user;
+  const execSort = async (orderValue: string) => {
+    setOrder(orderValue);
 
     await searchAction({
       keyword,
-      user,
-      sortValue,
-      setSort,
+      user: router.query.user,
+      order: orderValue,
       setSearchBarOpen,
       setSortSelectionOpen,
     });
@@ -95,10 +93,9 @@ const User: NextPage = () => {
           ソート
         </button>
         {sortSelectionOpen && (
-          <select value={sort} onChange={(e) => execSort(e.target.value)}>
-            <option value="">関連度順</option>
-            <option value="created_at:desc">作成日が新しい順</option>
-            <option value="created_at:asc">作成日が古い順</option>
+          <select value={order} onChange={(e) => execSort(e.target.value)}>
+            <option value="">{router.query.keyword ? "関連度" : "最新"}</option>
+            <option value="popular">ブックマーク数</option>
           </select>
         )}
       </div>
