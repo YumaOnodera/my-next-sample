@@ -27,7 +27,7 @@ const PostModal: React.FC<PostModalProps> = ({ setPostModalOpen }) => {
 
       <form onSubmit={execStorePost}>
         <textarea
-          id="name"
+          id="post"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />

@@ -50,7 +50,7 @@ const Home: NextPage = () => {
         {searchBarOpen && (
           <form onSubmit={execSearch}>
             <input
-              id="search"
+              id="keyword"
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
