@@ -27,7 +27,6 @@ type UpdateUser = (params: {
 type DeleteUser = (params: {
   userId: number;
   password: string;
-  logout: () => Promise<void>;
   setErrors: SetErrors;
 }) => Promise<void>;
 

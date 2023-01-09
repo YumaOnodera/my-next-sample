@@ -44,12 +44,12 @@ export const useUsers = () => {
       });
   };
 
-  const deleteUser: DeleteUser = async ({ setErrors, logout, ...props }) => {
+  const deleteUser: DeleteUser = async ({ setErrors, ...props }) => {
     setErrors([]);
 
     axios
       .delete(`/api/users/${props.userId}`, { data: props })
-      .then(() => logout())
+      .then(() => mutateAuth())
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 

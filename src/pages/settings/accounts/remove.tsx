@@ -12,7 +12,7 @@ const Remove: NextPage = () => {
   const [errors, setErrors] = useState<Errors>([]);
   const [password, setPassword] = useState("");
 
-  const { auth, logout } = useAuth();
+  const { auth } = useAuth();
   const { deleteUser } = useUsers();
 
   const execDeleteUser = async (e: { preventDefault: () => void }) => {
@@ -23,7 +23,6 @@ const Remove: NextPage = () => {
     await deleteUser({
       userId: auth.id,
       password,
-      logout,
       setErrors,
     });
   };
