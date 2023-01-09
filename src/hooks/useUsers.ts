@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
+import { useAuth } from "hooks/useAuth";
 import { useFormat } from "hooks/useFormat";
+import { usePosts } from "hooks/usePosts";
 import { useSwrSettings } from "hooks/useSwrSettings";
 import axios from "libs/axios";
 
@@ -10,7 +12,9 @@ import type { DeleteUser, UpdateUser, User } from "types/users";
 export const useUsers = () => {
   const router = useRouter();
 
+  const { mutateAuth } = useAuth();
   const { objectValuesToString } = useFormat();
+  const { mutatePosts } = usePosts();
   const { fetcher, config } = useSwrSettings();
 
   const {
@@ -28,7 +32,11 @@ export const useUsers = () => {
 
     axios
       .put(`/api/users/${props.userId}`, props)
-      .then(() => mutateUser())
+      .then(() => {
+        mutateAuth();
+        mutatePosts();
+        mutateUser();
+      })
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 

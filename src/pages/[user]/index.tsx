@@ -68,8 +68,8 @@ const User: NextPage = () => {
   };
 
   useEffect(() => {
-    auth && setName(auth.name);
-  }, [auth]);
+    user && setName(user.name);
+  }, [user]);
 
   return (
     <AppLayout title={name} description="ユーザー画面">
