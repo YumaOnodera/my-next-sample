@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useState } from "react";
 
 import AppLayout from "components/Layouts/AppLayout";
@@ -8,8 +8,6 @@ import { useUsers } from "hooks/useUsers";
 import type { NextPage } from "next";
 
 const Admin: NextPage = () => {
-  const router = useRouter();
-
   const [keyword, setKeyword] = useState("");
   const [searchBarOpen, setSearchBarOpen] = useState(false);
 
@@ -77,7 +75,11 @@ const Admin: NextPage = () => {
             return (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.name}</td>
+                <td>
+                  <Link href={`/${user.id}`}>
+                    <a>{user.name}</a>
+                  </Link>
+                </td>
                 <td>{user.email}</td>
                 <td>{user.email_verified_at}</td>
                 <td>{user.is_admin ? "管理者" : "一般"}</td>
