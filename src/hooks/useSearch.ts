@@ -10,17 +10,19 @@ export const useSearch = () => {
     keyword,
     user,
     order,
+    activeOnly,
     setSearchBarOpen,
     setSortSelectionOpen,
   }) => {
-    setSearchBarOpen(false);
-    setSortSelectionOpen(false);
+    if (setSearchBarOpen) setSearchBarOpen(false);
+    if (setSortSelectionOpen) setSortSelectionOpen(false);
 
     const query: SearchQuery = {};
 
     if (keyword) query["keyword"] = keyword;
     if (user) query["user"] = user;
     if (order) query["order"] = order;
+    if (activeOnly) query["active_only"] = true;
 
     await router.push({
       query,

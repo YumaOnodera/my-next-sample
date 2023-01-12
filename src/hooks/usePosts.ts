@@ -12,7 +12,7 @@ import type { Post, Posts, StorePost, UpdatePost } from "types/posts";
 export const usePosts = () => {
   const router = useRouter();
 
-  const { createUrl, objectValuesToString } = useFormat();
+  const { createQueryString, objectValuesToString } = useFormat();
   const { fetcher, config } = useSwrSettings();
 
   const formatQuery = (query: ParsedUrlQuery) => {
@@ -33,7 +33,7 @@ export const usePosts = () => {
     mutate: mutatePosts,
     error: errorPosts,
   } = useSWR<Posts>(
-    !router.query.post ? `/api/posts?${createUrl(query)}` : null,
+    !router.query.post ? `/api/posts?${createQueryString(query)}` : null,
     fetcher,
     config()
   );

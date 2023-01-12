@@ -47,7 +47,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ setPostModalOpen, auth }) => {
 
       <div onClick={() => setOthersMenuOpen((prev) => !prev)}>その他</div>
       {othersMenuOpen && (
-        <div>
+        <>
           {auth && <div>{auth.name}</div>}
           <div>
             <Link href="/settings">
@@ -59,6 +59,14 @@ const SideMenu: React.FC<SideMenuProps> = ({ setPostModalOpen, auth }) => {
               <a>ヘルプ</a>
             </Link>
           </div>
+        </>
+      )}
+
+      {auth?.is_admin && (
+        <div>
+          <Link href="/admin">
+            <a>ユーザー管理</a>
+          </Link>
         </div>
       )}
     </nav>

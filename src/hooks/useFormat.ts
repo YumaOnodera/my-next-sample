@@ -3,7 +3,7 @@ export const useFormat = () => {
     return Object.values(obj).flat().join(",").split(",");
   };
 
-  const createUrl = <T>(props: T) => {
+  const createQueryString = <T>(props: T) => {
     const arrayQuery = Object.entries(props)
       .flatMap(([key, value]) => {
         return Array.isArray(value)
@@ -19,6 +19,6 @@ export const useFormat = () => {
 
   return {
     objectValuesToString,
-    createUrl,
+    createQueryString,
   };
 };

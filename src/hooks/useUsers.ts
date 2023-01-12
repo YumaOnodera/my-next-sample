@@ -7,15 +7,25 @@ import { usePosts } from "hooks/usePosts";
 import { useSwrSettings } from "hooks/useSwrSettings";
 import axios from "libs/axios";
 
-import type { DeleteUser, UpdateUser, User } from "types/users";
+import type { DeleteUser, UpdateUser, User, Users } from "types/users";
 
 export const useUsers = () => {
   const router = useRouter();
 
   const { mutateAuth } = useAuth();
-  const { objectValuesToString } = useFormat();
+  const { createQueryString, objectValuesToString } = useFormat();
   const { mutatePosts } = usePosts();
   const { fetcher, config } = useSwrSettings();
+
+  const {
+    data: users,
+    mutate: mutateUsers,
+    error: errorUsers,
+  } = useSWR<Users>(
+    !router.query.user ? `/api/users?${createQueryString(router.query)}` : null,
+    fetcher,
+    config()
+  );
 
   const {
     data: user,
@@ -58,6 +68,9 @@ export const useUsers = () => {
   };
 
   return {
+    users,
+    mutateUsers,
+    errorUsers,
     user,
     mutateUser,
     errorUser,

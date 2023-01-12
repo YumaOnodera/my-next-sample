@@ -7,9 +7,9 @@ type User = {
   email?: string;
   email_verified_at?: string;
   is_admin?: boolean;
-  created_by?: string;
   created_at?: string;
   updated_at?: string;
+  deleted_at?: string;
 };
 
 type Users =
