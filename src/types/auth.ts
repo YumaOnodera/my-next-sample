@@ -30,7 +30,6 @@ type RestoreToken = (params: {
 }) => Promise<void>;
 
 type Restore = (params: {
-  restore_token: string;
   setRestoreCompleted: Dispatch<SetStateAction<boolean>>;
   setErrors: SetErrors;
 }) => Promise<void>;

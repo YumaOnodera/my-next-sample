@@ -71,7 +71,7 @@ export const useAuth = () => {
         const token = response.data.restore_token;
 
         token
-          ? router.push("/restore?token=" + token)
+          ? router.push(`/restore/${token}`)
           : login({ setErrors, setStatus, ...props });
       })
       .catch((error) => {
@@ -81,17 +81,13 @@ export const useAuth = () => {
       });
   };
 
-  const restore: Restore = async ({
-    setErrors,
-    setRestoreCompleted,
-    ...props
-  }) => {
+  const restore: Restore = async ({ setErrors, setRestoreCompleted }) => {
     await csrf();
 
     setErrors([]);
 
     axios
-      .post("/restore", props)
+      .post(`/restore/${router.query.token}`)
       .then(() => setRestoreCompleted(true))
       .catch((error) => {
         if (error.response.status !== 422) throw error;
