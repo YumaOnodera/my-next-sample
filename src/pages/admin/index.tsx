@@ -1,18 +1,21 @@
 import Link from "next/link";
 import React, { useState } from "react";
 
+import AuthValidationErrors from "components/AuthValidationErrors";
 import AppLayout from "components/Layouts/AppLayout";
 import { useSearch } from "hooks/useSearch";
 import { useUsers } from "hooks/useUsers";
 
 import type { NextPage } from "next";
+import type { Errors } from "types/errors";
 
 const Admin: NextPage = () => {
+  const [errors, setErrors] = useState<Errors>([]);
   const [keyword, setKeyword] = useState("");
   const [searchBarOpen, setSearchBarOpen] = useState(false);
 
   const { searchAction } = useSearch();
-  const { users } = useUsers();
+  const { users, deleteUser, updatePermission, restoreUser } = useUsers();
 
   const execSearch = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -31,9 +34,36 @@ const Admin: NextPage = () => {
     });
   };
 
+  const restoreUserConfirm = async (name: string, userId: number) => {
+    window.confirm(`アカウント「${name}」を復活しますか？`) &&
+      (await restoreUser({ user_id: userId, setErrors }));
+  };
+
+  const updatePermissionConfirm = async (
+    name: string,
+    userId: number,
+    isAdmin?: boolean
+  ) => {
+    const type = isAdmin ? "一般ユーザー" : "管理者";
+
+    window.confirm(`アカウント「${name}」の権限を${type}に変更しますか？`) &&
+      (await updatePermission({
+        user_id: userId,
+        is_admin: !isAdmin,
+        setErrors,
+      }));
+  };
+
+  const deleteUserConfirm = async (name: string, userId: number) => {
+    window.confirm(`アカウント「${name}」を削除しますか？`) &&
+      (await deleteUser({ user_id: userId, setErrors }));
+  };
+
   return (
     <AppLayout title="ユーザー管理" description="ユーザー管理画面">
       <hr />
+      <AuthValidationErrors errors={errors} />
+
       <div>
         <button onClick={() => setSearchBarOpen((prev) => !prev)}>検索</button>
         {searchBarOpen && (
@@ -68,6 +98,7 @@ const Admin: NextPage = () => {
             <th>作成日時</th>
             <th>更新日時</th>
             <th>削除日時</th>
+            <th>各種操作</th>
           </tr>
         </thead>
         <tbody>
@@ -86,6 +117,34 @@ const Admin: NextPage = () => {
                 <td>{user.created_at}</td>
                 <td>{user.updated_at}</td>
                 <td>{user.deleted_at}</td>
+                <td>
+                  {user.deleted_at ? (
+                    <button
+                      onClick={() => restoreUserConfirm(user.name, user.id)}
+                    >
+                      復活
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() =>
+                          updatePermissionConfirm(
+                            user.name,
+                            user.id,
+                            user.is_admin
+                          )
+                        }
+                      >
+                        {user.is_admin ? "一般ユーザーにする" : "管理者にする"}
+                      </button>
+                      <button
+                        onClick={() => deleteUserConfirm(user.name, user.id)}
+                      >
+                        削除
+                      </button>
+                    </>
+                  )}
+                </td>
               </tr>
             );
           })}

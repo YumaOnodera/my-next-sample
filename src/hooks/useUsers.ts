@@ -7,7 +7,14 @@ import { usePosts } from "hooks/usePosts";
 import { useSwrSettings } from "hooks/useSwrSettings";
 import axios from "libs/axios";
 
-import type { DeleteUser, UpdateUser, User, Users } from "types/users";
+import type {
+  DeleteUser,
+  RestoreUser,
+  UpdatePermission,
+  UpdateUser,
+  User,
+  Users,
+} from "types/users";
 
 export const useUsers = () => {
   const router = useRouter();
@@ -41,7 +48,7 @@ export const useUsers = () => {
     setErrors([]);
 
     axios
-      .put(`/api/users/${props.userId}`, props)
+      .put(`/api/users/${props.user_id}`, props)
       .then(() => {
         mutateAuth();
         mutatePosts();
@@ -58,8 +65,40 @@ export const useUsers = () => {
     setErrors([]);
 
     axios
-      .delete(`/api/users/${props.userId}`, { data: props })
-      .then(() => mutateAuth())
+      .delete(`/api/users/${props.user_id}`, { data: props })
+      .then(() => {
+        mutateAuth();
+        mutateUsers();
+      })
+      .catch((error) => {
+        if (error.response.status !== 422) throw error;
+
+        setErrors(objectValuesToString(error.response.data.message));
+      });
+  };
+
+  const updatePermission: UpdatePermission = async ({
+    setErrors,
+    ...props
+  }) => {
+    setErrors([]);
+
+    axios
+      .put(`/api/users/${props.user_id}/update-permission`, props)
+      .then(() => mutateUsers())
+      .catch((error) => {
+        if (error.response.status !== 422) throw error;
+
+        setErrors(objectValuesToString(error.response.data.message));
+      });
+  };
+
+  const restoreUser: RestoreUser = async ({ user_id, setErrors }) => {
+    setErrors([]);
+
+    axios
+      .post(`/api/users/${user_id}/restore`)
+      .then(() => mutateUsers())
       .catch((error) => {
         if (error.response.status !== 422) throw error;
 
@@ -76,5 +115,7 @@ export const useUsers = () => {
     errorUser,
     updateUser,
     deleteUser,
+    updatePermission,
+    restoreUser,
   };
 };

@@ -62,7 +62,7 @@ const User: NextPage = () => {
 
     if (!auth) return;
 
-    await updateUser({ userId: auth.id, name, setErrors });
+    await updateUser({ user_id: auth.id, name, setErrors });
 
     toggleEditable();
   };

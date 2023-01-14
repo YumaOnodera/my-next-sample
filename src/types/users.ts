@@ -19,15 +19,33 @@ type Users =
   | null;
 
 type UpdateUser = (params: {
-  userId: number;
+  user_id: number;
   name: string;
   setErrors: SetErrors;
 }) => Promise<void>;
 
 type DeleteUser = (params: {
-  userId: number;
-  password: string;
+  user_id: number;
+  password?: string;
   setErrors: SetErrors;
 }) => Promise<void>;
 
-export type { User, Users, UpdateUser, DeleteUser };
+type UpdatePermission = (params: {
+  user_id: number;
+  is_admin: boolean;
+  setErrors: SetErrors;
+}) => Promise<void>;
+
+type RestoreUser = (params: {
+  user_id: number;
+  setErrors: SetErrors;
+}) => Promise<void>;
+
+export type {
+  User,
+  Users,
+  UpdateUser,
+  DeleteUser,
+  UpdatePermission,
+  RestoreUser,
+};
