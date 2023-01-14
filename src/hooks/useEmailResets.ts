@@ -1,5 +1,3 @@
-import { useRouter } from "next/router";
-
 import { useAuth } from "hooks/useAuth";
 import { useFormat } from "hooks/useFormat";
 import { useUsers } from "hooks/useUsers";
@@ -8,8 +6,6 @@ import axios from "libs/axios";
 import type { SendEmailResetLink, UpdateEmail } from "types/emailResets";
 
 export const useEmailResets = () => {
-  const router = useRouter();
-
   const { mutateAuth } = useAuth();
   const { mutateUser } = useUsers();
   const { objectValuesToString } = useFormat();
@@ -35,13 +31,14 @@ export const useEmailResets = () => {
   };
 
   const updateEmail: UpdateEmail = async ({
+    token,
     setErrors,
     setUpdateEmailCompleted,
   }) => {
     setErrors([]);
 
     axios
-      .put(`/api/email-resets/${router.query.token}`)
+      .put(`/api/email-resets/${token}`)
       .then(() => {
         mutateAuth();
         mutateUser();

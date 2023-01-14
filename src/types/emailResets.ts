@@ -10,6 +10,7 @@ type SendEmailResetLink = (params: {
 }) => Promise<void>;
 
 type UpdateEmail = (params: {
+  token: string;
   setUpdateEmailCompleted: Dispatch<SetStateAction<boolean>>;
   setErrors: SetErrors;
 }) => Promise<void>;
