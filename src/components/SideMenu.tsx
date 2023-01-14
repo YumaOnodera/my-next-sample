@@ -1,10 +1,14 @@
 import Link from "next/link";
 import React, { useState } from "react";
 
+import { useAuth } from "hooks/useAuth";
+
 import type { SideMenuProps } from "types/sideMenuProps";
 
-const SideMenu: React.FC<SideMenuProps> = ({ setPostModalOpen, auth }) => {
+const SideMenu: React.FC<SideMenuProps> = ({ setPostModalOpen }) => {
   const [othersMenuOpen, setOthersMenuOpen] = useState(false);
+
+  const { auth, logout } = useAuth();
 
   return (
     <nav>
@@ -45,29 +49,24 @@ const SideMenu: React.FC<SideMenuProps> = ({ setPostModalOpen, auth }) => {
         </>
       )}
 
-      <div onClick={() => setOthersMenuOpen((prev) => !prev)}>その他</div>
-      {othersMenuOpen && (
-        <>
-          {auth && <div>{auth.name}</div>}
-          <div>
-            <Link href="/settings">
-              <a>設定</a>
-            </Link>
-          </div>
-          <div>
-            <Link href="/">
-              <a>ヘルプ</a>
-            </Link>
-          </div>
-        </>
-      )}
-
       {auth?.is_admin && (
         <div>
           <Link href="/admin">
             <a>ユーザー管理</a>
           </Link>
         </div>
+      )}
+
+      <div onClick={() => setOthersMenuOpen((prev) => !prev)}>その他</div>
+      {othersMenuOpen && (
+        <>
+          <div>
+            <Link href="/settings">
+              <a>設定</a>
+            </Link>
+          </div>
+          {auth && <div onClick={logout}>ログアウト</div>}
+        </>
       )}
     </nav>
   );

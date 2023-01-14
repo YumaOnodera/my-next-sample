@@ -33,7 +33,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <SideMenu auth={auth} setPostModalOpen={setPostModalOpen} />
+      <SideMenu setPostModalOpen={setPostModalOpen} />
 
       {postModalOpen && <PostModal setPostModalOpen={setPostModalOpen} />}
 
