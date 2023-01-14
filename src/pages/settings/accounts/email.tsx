@@ -31,9 +31,8 @@ const Email: NextPage = () => {
     });
   };
 
-  const execUpdateEmail = useCallback(async (token: string) => {
+  const execUpdateEmail = useCallback(async () => {
     await updateEmail({
-      token,
       setUpdateEmailCompleted,
       setErrors,
     });
@@ -44,9 +43,7 @@ const Email: NextPage = () => {
   }, [auth?.email]);
 
   useEffect(() => {
-    const token = router.query.token?.toString();
-
-    token && execUpdateEmail(token);
+    router.query.token && execUpdateEmail();
   }, [execUpdateEmail, router.query.token]);
 
   return (
