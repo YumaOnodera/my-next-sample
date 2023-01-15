@@ -1,11 +1,9 @@
 import "../styles/globals.css";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Provider } from "react-redux";
 
 import { usePosts } from "hooks/usePosts";
 import { useUsers } from "hooks/useUsers";
-import store from "store";
 
 import type { AppProps } from "next/app";
 
@@ -21,11 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [errorPost, errorPosts, errorUser, router]);
 
-  return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
-  );
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;
